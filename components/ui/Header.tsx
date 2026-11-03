@@ -1,14 +1,15 @@
 import { Notification01Icon, Share08Icon } from "@hugeicons/core-free-icons";
 import { HugeiconsIcon } from "@hugeicons/react";
 import Image from "next/image";
+import Link from "next/link";
 
 export default function Header() {
   return (
     <main className="w-full h-18 flex justify-between items-center px-2 lg:px-4 ">
-      <div className="flex items-center gap-1">
+      <Link href={"/dashboard"} className="flex items-center gap-1">
         <Image src={"/brand/logo.png"} width={50} height={50} alt="logo" className="h-12 w-12"/>
         <h2 className="font-medium text-2xl">SpendWise</h2>
-      </div>
+      </Link>
 
       <div className="flex items-center gap-3">
         <div className="p-1.5 border border-neutral-300 rounded-lg hover:bg-neutral-200 cursor-pointer h-10 w-10 flex items-center justify-center">
