@@ -1,6 +1,6 @@
 import Graphs from "@/components/dashboard/Graphs";
 import SummaryCard from "@/components/dashboard/SummaryCard";
-import TransactionsList from "@/components/dashboard/TransactionsList";
+import Transactions from "@/components/dashboard/Transactions";
 import {
   MoneyReceiveCircleIcon,
   MoneySendCircleIcon,
@@ -54,7 +54,7 @@ export default function dashboard() {
         ))}
       </div>
       <Graphs/>
-      <TransactionsList/>
+      <Transactions/>
     </main>
   );
 }

@@ -9,7 +9,7 @@ export default function Graphs() {
 
 function LineGraph() {
   return (
-    <div className="flex-3 h-70 bg-neutral-50 border border-neutral-300/70  rounded-xl p-4">
+    <div className="flex-1 h-70 bg-neutral-50 border border-neutral-300/70  rounded-xl p-4">
       Line graph
     </div>
   );

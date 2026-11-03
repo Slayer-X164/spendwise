@@ -12,11 +12,11 @@ export default function Header() {
       </Link>
 
       <div className="flex items-center gap-3">
+         <div className="rounded-full overflow-hidden cursor-pointer">
+          <Image src={"/brand/pfp.jpg"} width={50} height={50} alt="profile picture" className="h-10 w-10"/>
+        </div>
         <div className="p-1.5 border border-neutral-300 rounded-lg hover:bg-neutral-200 cursor-pointer h-10 w-10 flex items-center justify-center">
           <HugeiconsIcon icon={Notification01Icon} />
-        </div>
-        <div className="rounded-full overflow-hidden cursor-pointer">
-          <Image src={"/brand/pfp.jpg"} width={50} height={50} alt="profile picture" className="h-10 w-10"/>
         </div>
         <div className="bg-blue-700 text-neutral-50 flex items-center gap-1 h-10 px-3 rounded-lg cursor-pointer font-medium ml-4">
           <h3>Share</h3>
