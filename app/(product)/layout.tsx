@@ -29,7 +29,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
         <Header />
         <div className="flex flex-row">
           <Sidebar />
-          <div className="bg-neutral-200/70 flex-1 rounded-l-xl  p-3">
+          <div className="bg-neutral-200/70 flex-1 rounded-xl sm:rounded-l-xl  p-2 sm:p-3">
             {children}
           </div>
         </div>

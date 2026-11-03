@@ -39,8 +39,8 @@ export default function dashboard() {
     },
   ];
   return (
-    <main className="w-full h-full flex flex-col gap-3">
-      <div className="w-full h-auto  flex gap-3">
+    <main className="w-full h-full  flex flex-col gap-3">
+      <div className="w-full h-auto flex flex-col lg:flex-row gap-3 flex-wrap mt-1.5 sm:mt-0">
         {SummaryCardsData.map((card) => (
           <SummaryCard
             key={card.id}

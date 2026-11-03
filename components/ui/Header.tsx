@@ -8,18 +8,18 @@ export default function Header() {
     <main className="w-full h-18 flex justify-between items-center px-2 lg:px-4 ">
       <Link href={"/dashboard"} className="flex items-center gap-1">
         <Image src={"/brand/logo.png"} width={50} height={50} alt="logo" className="h-12 w-12"/>
-        <h2 className="font-medium text-2xl">SpendWise</h2>
+        <h2 className="font-medium text-lg sm:text-2xl hidden sm:block">SpendWise</h2>
       </Link>
 
       <div className="flex items-center gap-3">
          <div className="rounded-full overflow-hidden cursor-pointer">
-          <Image src={"/brand/pfp.jpg"} width={50} height={50} alt="profile picture" className="h-10 w-10"/>
+          <Image src={"/brand/pfp.jpg"} width={50} height={50} alt="profile picture" className="lg:h-10 lg:w-10 h-9 w-9"/>
         </div>
-        <div className="p-1.5 border border-neutral-300 rounded-lg hover:bg-neutral-200 cursor-pointer h-10 w-10 flex items-center justify-center">
+        <div className="p-1.5 border border-neutral-300 rounded-lg hover:bg-neutral-200 cursor-pointer lg:h-10 lg:w-10 h-9 w-9 flex items-center justify-center">
           <HugeiconsIcon icon={Notification01Icon} />
         </div>
-        <div className="bg-blue-700 text-neutral-50 flex items-center gap-1 h-10 px-3 rounded-lg cursor-pointer font-medium ml-4">
-          <h3>Share</h3>
+        <div className="hidden bg-blue-700 text-neutral-50 sm:flex items-center gap-1 h-10 px-3 rounded-lg cursor-pointer font-medium ml-2 sm:ml-4">
+          <h3 className="hidden sm:block">Share</h3>
           <HugeiconsIcon icon={Share08Icon} />
         </div>
       </div>

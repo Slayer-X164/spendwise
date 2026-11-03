@@ -1,6 +1,6 @@
 export default function Graphs() {
   return (
-    <div className="flex items-center gap-3">
+    <div className="flex flex-col lg:flex-row items-center gap-3">
       <Chart_1 />
       <Chart_2 />
     </div>

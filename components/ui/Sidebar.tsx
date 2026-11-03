@@ -4,7 +4,7 @@ import SidebarLinks from "./SidebarLinks";
 
 export default function Sidebar() {
   return (
-    <main className="w-80 h-[calc(100dvh-72px)] flex flex-col items-center justify-between gap-4 p-3 ">
+    <main className="w-80 h-[calc(100dvh-72px)] flex-col items-center justify-between gap-4 p-3 hidden min-[1250px]:flex">
       <div className="w-full">
         <h3 className="uppercase tracking-wider text-xs text-neutral-400 px-4">
           main menu
