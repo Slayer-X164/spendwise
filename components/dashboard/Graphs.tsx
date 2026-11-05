@@ -1,4 +1,5 @@
 import { Chart_1 } from "./Chart_01";
+import { Chart_2 } from "./Chart_02";
 
 export default function Graphs() {
   return (
@@ -11,10 +12,4 @@ export default function Graphs() {
 
 
 
-function Chart_2() {
-  return (
-    <div className="flex-1 h-70 bg-neutral-50 border border-neutral-300/70  rounded-xl p-4">
-      Pie chart
-    </div>
-  );
-}
+

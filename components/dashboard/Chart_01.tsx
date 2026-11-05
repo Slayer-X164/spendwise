@@ -13,6 +13,7 @@ const monthlyExpenses = [
   { month: "May", expense: 14600 },
   { month: "June", expense: 21000 },
   { month: "July", expense: 17500 },
+  { month: "August", expense: 12000}
 ];
 
 const barGraph = defineChart({
@@ -58,7 +59,7 @@ const barGraph = defineChart({
 
 export function Chart_1() {
   return (
-    <div className="flex-1 w-full h-70 bg-neutral-50 border border-neutral-300/70  rounded-xl p-4">
+    <div className="flex-3 w-full h-70 bg-neutral-50 border border-neutral-300/70  rounded-xl p-4">
       <h3 className="capitalize font-medium text-sm pb-3">Monthly Expense</h3>
       <Chart
         definition={barGraph}

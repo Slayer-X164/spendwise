@@ -5,9 +5,9 @@ import Link from "next/link";
 
 export default function Header() {
   return (
-    <main className="w-full h-18 flex justify-between items-center px-2 lg:px-4 ">
+    <main className="w-full h-16 sm:h-18 flex justify-between items-center px-2 lg:px-4 ">
       <Link href={"/dashboard"} className="flex items-center gap-1">
-        <Image src={"/brand/logo.png"} width={50} height={50} alt="logo" className="h-12 w-12"/>
+        <Image src={"/brand/logo.png"} width={50} height={50} alt="logo" className="h-12 w-12" loading="eager"/>
         <h2 className="font-medium text-lg sm:text-2xl hidden sm:block">SpendWise</h2>
       </Link>
 

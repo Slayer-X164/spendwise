@@ -2,6 +2,7 @@ import Graphs from "@/components/dashboard/Graphs";
 import SummaryCard from "@/components/dashboard/SummaryCard";
 import Transactions from "@/components/dashboard/Transactions";
 import {
+  Cash02Icon,
   MoneyReceiveCircleIcon,
   MoneySendCircleIcon,
   TrendingUpIcon,
@@ -37,10 +38,18 @@ export default function dashboard() {
       trendPercentage: 4.5,
       trendIcon: TrendingUpIcon,
     },
+    {
+      id: 4,
+      title: "top spending",
+      amount:4000,
+      description: "what you hvae spent",
+      icon: Cash02Icon,
+      topSpendingCategoryName: "Food & Dining"
+    },
   ];
   return (
     <main className="w-full h-full  flex flex-col gap-3">
-      <div className="w-full h-auto flex flex-col lg:flex-row gap-3 flex-wrap mt-1.5 sm:mt-0">
+      <div className="w-full h-auto grid grid-cols-2 lg:flex lg:flex-row gap-2 sm:gap-3 flex-wrap mt-1.5 sm:mt-0">
         {SummaryCardsData.map((card) => (
           <SummaryCard
             key={card.id}
@@ -50,6 +59,7 @@ export default function dashboard() {
             icon={card.icon}
             trendPercentage={card.trendPercentage}
             trendIcon={card.trendIcon}
+            topSpendingCategoryName={card.topSpendingCategoryName}
           />
         ))}
       </div>

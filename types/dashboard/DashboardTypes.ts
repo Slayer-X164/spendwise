@@ -5,6 +5,7 @@ export type SummaryCardProps = {
   amount:number
   description:string
   icon:IconSvgElement
-  trendPercentage:number
-  trendIcon:IconSvgElement
+  trendPercentage?:number
+  trendIcon?:IconSvgElement
+  topSpendingCategoryName?:string
 }
