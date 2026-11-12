@@ -1,4 +1,6 @@
 "use client";
+import { Calendar03Icon } from "@hugeicons/core-free-icons";
+import { HugeiconsIcon } from "@hugeicons/react";
 import { barY, defineChart } from "@tanstack/charts";
 import { Chart } from "@tanstack/charts/react/tooltip";
 import { scaleBand } from "@tanstack/charts/scales/band";
@@ -11,7 +13,7 @@ const monthlyExpenses = [
   { month: "March", expense: 11200 },
   { month: "April", expense: 18400 },
   { month: "May", expense: 14600 },
-  { month: "June", expense: 21000 },
+  { month: "June", expense: 20000 },
   { month: "July", expense: 17500 },
   { month: "August", expense: 12000}
 ];
@@ -60,10 +62,20 @@ const barGraph = defineChart({
 export function Chart_1() {
   return (
     <div className="flex-3 w-full h-70 bg-neutral-50 border border-neutral-300/70  rounded-xl p-4">
-      <h3 className="capitalize font-medium text-sm pb-3">Monthly Expense</h3>
+      <div className="flex items-center gap-2 mb-3">
+          <div className="size-9 rounded-lg bg-blue-50 flex items-center justify-center border border-blue-200">
+            <HugeiconsIcon
+              icon={Calendar03Icon}
+              size={20}
+              className="text-blue-500"
+            />
+          </div>
+
+          <h2 className="font-semibold text-sm capitalize">Monthly Expense</h2>
+        </div>
       <Chart
         definition={barGraph}
-        height={210}
+        height={200}
         ariaLabel="Monthly expense"
         renderTooltipBody={({ points }) => {
           const point = points[0];

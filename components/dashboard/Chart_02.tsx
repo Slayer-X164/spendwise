@@ -1,18 +1,20 @@
-"use client"
-import { Chart } from '@tanstack/charts/react/tooltip'
-import { tooltip as exampleTooltip, tooltip } from '@tanstack/charts/tooltip'
+"use client";
+import { Chart } from "@tanstack/charts/react/tooltip";
+import { tooltip as exampleTooltip, tooltip } from "@tanstack/charts/tooltip";
 
-import { defineChart } from '@tanstack/charts'
-import { pie, polar, radialArc } from '@tanstack/charts/polar'
+import { defineChart } from "@tanstack/charts";
+import { pie, polar, radialArc } from "@tanstack/charts/polar";
+import { HugeiconsIcon } from "@hugeicons/react";
+import { DiscountTag02Icon } from "@hugeicons/core-free-icons";
 // import { alphabet } from '@tanstack/charts-data/alphabet'
 // import { selectRoundedDonutData } from './selection'
 
-const gapAngle = (Math.PI / 180) * 3
-const colors = ['#0284c7', '#4f46e5', '#9333ea', '#db2777', '#ea580c']
-const percentage = new Intl.NumberFormat('en-US', {
-  style: 'percent',
+const gapAngle = (Math.PI / 180) * 3;
+const colors = ["#0284c7", "#4f46e5", "#9333ea", "#db2777", "#ea580c"];
+const percentage = new Intl.NumberFormat("en-US", {
+  style: "percent",
   maximumFractionDigits: 2,
-})
+});
 
 const categoryExpenses = [
   { category: "Food & Dining", expense: 8500 },
@@ -24,9 +26,9 @@ const categoryExpenses = [
 
 export const pieChart = (input: ChartOptions) => {
   const arcs = pie(categoryExpenses, {
-    value: 'expense',
+    value: "expense",
     gapAngle,
-  })
+  });
 
   return defineChart(
     {
@@ -35,11 +37,11 @@ export const pieChart = (input: ChartOptions) => {
           radiusRatio: 0.8,
           marks: [
             radialArc(arcs, {
-              id: 'category-slices',
-              key: 'category',
+              id: "category-slices",
+              key: "category",
               innerRadius: ({ radius }) => radius * 0.58,
               cornerRadius: 8,
-              color: 'category',
+              color: "category",
             }),
           ],
           scales: {
@@ -59,30 +61,37 @@ export const pieChart = (input: ChartOptions) => {
       keyboard: true,
       tooltip,
     },
-  )
-}
+  );
+};
 export interface ChartOptions {
-  revision: number
+  revision: number;
 }
-
-
 
 export const chart = pieChart({
   revision: 0,
-})
-
+});
 
 export function Chart_2() {
   return (
     <div className="flex-1 w-full h-70 bg-neutral-50 border border-neutral-300/70  rounded-xl p-4">
-      <h3 className="capitalize font-medium text-sm pb-0">Category wise Expense</h3>
+      <div className="flex items-center gap-2 ">
+        <div className="size-9 rounded-lg bg-green-50 flex items-center justify-center border border-green-200">
+          <HugeiconsIcon
+            icon={DiscountTag02Icon}
+            size={20}
+            className="text-green-500"
+          />
+        </div>
+
+        <h2 className="font-semibold text-sm capitalize">Category Expense</h2>
+      </div>
       <Chart
         definition={chart}
-        height={230}
+        height={220}
         ariaLabel="Category wise expense"
-        renderTooltipBody={({points}) => {
+        renderTooltipBody={({ points }) => {
           const point = points[0];
-          console.log("points: ", points)
+          console.log("points: ", points);
           if (!point) return null;
 
           return (
@@ -94,7 +103,6 @@ export function Chart_2() {
               <p className="text-sm font-semibold text-gray-900">
                 ₹{point.datum.expense.toLocaleString("en-IN")}
               </p>
-
             </div>
           );
         }}

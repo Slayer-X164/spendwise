@@ -1,5 +1,6 @@
-import { PreferenceHorizontalIcon } from "@hugeicons/core-free-icons";
+import { FileClockIcon, PreferenceHorizontalIcon } from "@hugeicons/core-free-icons";
 import { HugeiconsIcon } from "@hugeicons/react";
+import { MoreVerticalIcon, ReceiptTextIcon } from "@hugeicons/core-free-icons";
 
 export default function Transactions() {
   return (
@@ -96,24 +97,29 @@ function ExpensesList() {
 
   return (
     <div className="w-full lg:flex-3 min-w-0 h-full bg-neutral-50 border border-neutral-300/70 rounded-xl p-4 flex flex-col">
-
       {/* Header */}
       <div className="w-full flex items-center justify-between gap-2">
-        <h2 className="capitalize font-medium text-sm">
-          Recent Expenses
-        </h2>
+
+        <div className="flex items-center gap-2">
+          <div className="size-9 rounded-lg bg-rose-50 flex items-center justify-center border border-rose-200">
+            <HugeiconsIcon
+              icon={FileClockIcon}
+              size={20}
+              className="text-rose-500"
+            />
+          </div>
+
+          <h2 className="font-semibold text-sm capitalize">recent expense</h2>
+        </div>
 
         <button className="flex items-center gap-1 text-sm border py-1 px-2 rounded-md border-neutral-300 text-neutral-600 cursor-pointer hover:bg-neutral-100 shrink-0">
-          <HugeiconsIcon
-            icon={PreferenceHorizontalIcon}
-            className="size-4"
-          />
+          <HugeiconsIcon icon={PreferenceHorizontalIcon} className="size-4" />
           <span>Filter</span>
         </button>
       </div>
 
       {/* Desktop Table */}
-      <div className="hidden md:block mt-3 w-full min-w-0 overflow-x-auto">
+      <div className="hidden md:block mt-3 w-full min-w-0 overflow-x-auto px-2">
         <table className="w-full min-w-[600px] text-sm">
           <thead className="border-b border-neutral-300 sticky top-0">
             <tr className="text-left capitalize text-xs">
@@ -133,21 +139,13 @@ function ExpensesList() {
                 className="text-left text-sm font-normal text-neutral-600 border-b border-neutral-100 last:border-0"
               >
                 <td className="py-3 pr-3">{item.id}</td>
-                <td className="py-3 pr-3 min-w-[150px]">
-                  {item.name}
-                </td>
+                <td className="py-3 pr-3 min-w-[150px]">{item.name}</td>
                 <td className="py-3 pr-3 whitespace-nowrap tabular-nums">
                   ${item.price.toFixed(2)}
                 </td>
-                <td className="py-3 pr-3 whitespace-nowrap">
-                  {item.pay}
-                </td>
-                <td className="py-3 pr-3 whitespace-nowrap">
-                  {item.category}
-                </td>
-                <td className="py-3 whitespace-nowrap">
-                  {item.time}
-                </td>
+                <td className="py-3 pr-3 whitespace-nowrap">{item.pay}</td>
+                <td className="py-3 pr-3 whitespace-nowrap">{item.category}</td>
+                <td className="py-3 whitespace-nowrap">{item.time}</td>
               </tr>
             ))}
           </tbody>
@@ -185,24 +183,122 @@ function ExpensesList() {
               <p className="text-sm font-medium text-neutral-800 tabular-nums">
                 ${item.price.toFixed(2)}
               </p>
-              <p className="text-xs text-neutral-500 mt-1">
-                {item.pay}
-              </p>
+              <p className="text-xs text-neutral-500 mt-1">{item.pay}</p>
             </div>
           </div>
         ))}
       </div>
-
     </div>
   );
 }
 
 function SubscriptionsList() {
+  const subscriptions = [
+    {
+      id: 1,
+      name: "Netflix",
+      icon: "https://cdn.simpleicons.org/netflix/E50914",
+      price: 649,
+      billingCycle: "Monthly",
+      lastRenewed: "2026-10-18",
+      nextRenewal: "2026-11-18",
+      status: "Active",
+    },
+    {
+      id: 2,
+      name: "Spotify",
+      icon: "https://cdn.simpleicons.org/spotify/1DB954",
+      price: 119,
+      billingCycle: "Monthly",
+      lastRenewed: "2026-10-15",
+      nextRenewal: "2026-11-15",
+      status: "Active",
+    },
+    {
+      id: 3,
+      name: "YouTube Premium",
+      icon: "https://cdn.simpleicons.org/youtube/FF0000",
+      price: 149,
+      billingCycle: "Monthly",
+      lastRenewed: "2026-10-22",
+      nextRenewal: "2026-11-22",
+      status: "Active",
+    },
+    {
+      id: 4,
+      name: "Amazon Prime",
+      icon: "https://cdn.simpleicons.org/amazonprime/00A8E0",
+      price: 1499,
+      billingCycle: "Yearly",
+      lastRenewed: "2026-03-10",
+      nextRenewal: "2027-03-10",
+      status: "Active",
+    },
+  ];
+
+  const formatDate = (date: string) =>
+    new Date(date).toLocaleDateString("en-IN", {
+      day: "2-digit",
+      month: "short",
+      year: "numeric",
+    });
+
   return (
-    <div className="flex-1 bg-neutral-50 border border-neutral-300/70 rounded-xl p-4  flex flex-col h-full">
-      <h2 className="capitalize font-medium text-sm w-full text-left">
-        subscriptions
-      </h2>
+    <div className="flex-1 bg-white border border-neutral-200 rounded-xl p-4 flex flex-col h-full shadow-sm">
+      {/* Header */}
+      <div className="flex items-center justify-between mb-5">
+        <div className="flex items-center gap-2">
+          <div className="size-9 rounded-lg bg-amber-50 flex items-center justify-center border border-amber-200">
+            <HugeiconsIcon
+              icon={ReceiptTextIcon}
+              size={20}
+              className="text-amber-500"
+            />
+          </div>
+
+          <h2 className="font-semibold text-sm">Bill & Subscription</h2>
+        </div>
+      </div>
+
+      {/* Subscription List */}
+      <div className="flex flex-col gap-4">
+        {subscriptions.map((subscription) => (
+          <div
+            key={subscription.id}
+            className="flex items-center justify-between gap-3"
+          >
+            {/* Logo and Details */}
+            <div className="flex items-center gap-3 min-w-0">
+              <div className="size-10 shrink-0 rounded-full bg-neutral-50 flex items-center justify-center p-2">
+                <img
+                  src={subscription.icon}
+                  alt={subscription.name}
+                  className="size-full object-contain"
+                />
+              </div>
+
+              <div className="flex flex-col min-w-0">
+                <span className="text-sm font-medium truncate">
+                  {subscription.name}
+                </span>
+
+                <span className="text-xs text-neutral-500">
+                  {formatDate(subscription.lastRenewed)}
+                </span>
+              </div>
+            </div>
+
+            {/* Price */}
+            <span className="text-sm font-semibold whitespace-nowrap">
+              {subscription.price.toLocaleString("en-IN", {
+                style: "currency",
+                currency: "INR",
+                minimumFractionDigits: 2,
+              })}
+            </span>
+          </div>
+        ))}
+      </div>
     </div>
   );
 }
