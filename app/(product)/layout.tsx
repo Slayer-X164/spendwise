@@ -11,14 +11,14 @@ export const metadata: Metadata = {
 
 export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
-    <>
+    <main className="flex h-dvh w-full flex-col overflow-hidden">
       <Header />
-      <div className="flex flex-row">
+      <div className="flex flex-row w-full h-full min-h-0">
         <Sidebar />
-        <div className="bg-neutral-200/70 flex-1 rounded-xl sm:rounded-l-xl  p-2 sm:p-3">
+        <div className="bg-neutral-200/70 border border-neutral-300/70 flex-1 min-h-0 min-w-0 rounded-xl sm:rounded-l-xl  p-2 sm:p-3 overflow-y-auto">
           <Suspense fallback={<TabLoading/>}>{children}</Suspense>
         </div>
       </div>
-    </>
+    </main >
   );
 }

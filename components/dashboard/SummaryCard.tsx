@@ -12,7 +12,7 @@ export default function SummaryCard({
 }: SummaryCardProps) {
   return (
     <div
-      className={`bg-neutral-50 capitalize w-full  lg:w-80 flex-1 border border-neutral-300/70 h-24 sm:h-30 rounded-xl  flex flex-col justify-between p-3 sm:p-4 `}
+      className={`bg-neutral-50 capitalize w-full   flex-1 border border-neutral-300/70 h-24 sm:h-30 rounded-xl  flex flex-col justify-between p-3 sm:p-4 `}
     >
       <div className="flex justify-between items-center">
         <h3 className="text-neutral-500 font-medium text-xs sm:text-sm flex items-center gap-1">

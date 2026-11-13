@@ -48,7 +48,7 @@ export default function dashboard() {
     },
   ];
   return (
-    <main className="w-full h-full  flex flex-col gap-3">
+    <main className="w-full h-full  flex flex-col gap-3 ">
       <div className="w-full h-auto grid grid-cols-2 lg:flex lg:flex-row gap-2 sm:gap-3 flex-wrap mt-1.5 sm:mt-0">
         {SummaryCardsData.map((card) => (
           <SummaryCard
