@@ -3,6 +3,7 @@ import Sidebar from "@/components/ui/Sidebar";
 import Header from "@/components/ui/Header";
 import { Suspense } from "react";
 import TabLoading from "@/components/ui/TabLoading";
+import AddTransactionDialog from "@/components/transactions_page/AddTransactionDialog";
 
 export const metadata: Metadata = {
   title: "Spendwise",
@@ -12,6 +13,7 @@ export const metadata: Metadata = {
 export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
     <main className="flex h-dvh w-full flex-col overflow-hidden">
+      <AddTransactionDialog/>
       <Header />
       <div className="flex flex-row w-full h-full min-h-0">
         <Sidebar />

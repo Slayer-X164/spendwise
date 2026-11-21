@@ -98,6 +98,7 @@ function ExpensesList() {
   return (
     <div className="w-full lg:flex-3 min-w-0 h-full bg-neutral-50 border border-neutral-300/70 rounded-xl p-4 flex flex-col">
       {/* Header */}
+      
       <div className="w-full flex items-center justify-between gap-2">
 
         <div className="flex items-center gap-2">
