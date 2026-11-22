@@ -1,5 +1,5 @@
 "use client";
-import { useActionState } from "react";
+import { useActionState, useEffect, useState } from "react";
 import { createTransaction } from "../actions";
 import {
   EXPENSE_CATEGORIES,
@@ -15,7 +15,11 @@ export default function AddTransactionDialog() {
     createTransaction,
     initialState,
   );
-  console.log("data ", data);
+  const [today, setToday] = useState("");
+
+  useEffect(() => {
+    setToday(new Date().toLocaleDateString("en-CA"));
+  }, []);
 
   return (
     <section className="w-full min-h-full bg-neutral-700/50 z-50 fixed backdrop-blur-xs p-3 flex items-center justify-center">
@@ -118,7 +122,7 @@ export default function AddTransactionDialog() {
                   {EXPENSE_CATEGORIES.map((category) => (
                     <option
                       key={category}
-                       value={category == "select a category" ? "" : category}
+                      value={category == "select a category" ? "" : category}
                       disabled={category == "select a category" ? true : false}
                       className="bg-white p-4 w-full"
                     >
@@ -143,9 +147,7 @@ export default function AddTransactionDialog() {
               </label>
               <div className="border border-neutral-300 p-2 rounded-lg text-sm">
                 <input
-                  defaultValue={
-                    data?.fields?.date ?? new Date().toLocaleDateString("en-CA")
-                  }
+                  defaultValue={data?.fields?.date ?? today}
                   name="date"
                   type="date"
                   className="text-sm outline-none w-full "

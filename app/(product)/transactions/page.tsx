@@ -1,8 +1,9 @@
 import { Suspense } from "react";
 import TabChangeButtons from "@/features/transactionsAndSubscriptions/components/TabChangeButtons";
-import TransactionsTab from "@/components/transactions_page/TransactionsTab";
+
 import SubscriptionsTab from "@/features/transactionsAndSubscriptions/components/SubscriptionsTab";
 import TabLoading from "@/features/ui/components/TabLoading";
+import TransactionsTab from "@/features/transactionsAndSubscriptions/components/TransactionsTab";
 
 type TransactionsPageProps = {
   searchParams: Promise<{ tab: "subscriptions" }>;
