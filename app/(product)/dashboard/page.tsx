@@ -1,6 +1,6 @@
-import Graphs from "@/components/dashboard/Graphs";
-import SummaryCard from "@/components/dashboard/SummaryCard";
-import Transactions from "@/components/dashboard/Transactions";
+import Graphs from "@/features/dashboard/components/Graphs";
+import SummaryCard from "@/features/dashboard/components/SummaryCard";
+import Transactions from "@/features/dashboard/components/Transactions";
 import {
   Cash02Icon,
   MoneyReceiveCircleIcon,

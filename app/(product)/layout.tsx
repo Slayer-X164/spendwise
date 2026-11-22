@@ -1,9 +1,9 @@
 import type { Metadata } from "next";
-import Sidebar from "@/components/ui/Sidebar";
-import Header from "@/components/ui/Header";
+import Sidebar from "@/features/ui/components/Sidebar";
+import Header from "@/features/ui/components/Header";
 import { Suspense } from "react";
-import TabLoading from "@/components/ui/TabLoading";
-import AddTransactionDialog from "@/components/transactions_page/AddTransactionDialog";
+import TabLoading from "@/features/ui/components/TabLoading";
+import AddTransactionDialog from "@/features/transactionsAndSubscriptions/components/AddTransactionDialog";
 
 export const metadata: Metadata = {
   title: "Spendwise",

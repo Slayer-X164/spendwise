@@ -1,5 +1,5 @@
 import { HugeiconsIcon } from "@hugeicons/react";
-import { SummaryCardProps } from "../../types/dashboard/DashboardTypes";
+import { SummaryCardProps } from "@/types/dashboard/DashboardTypes";
 
 export default function SummaryCard({
   title,
