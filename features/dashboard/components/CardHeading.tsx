@@ -6,15 +6,15 @@ export const legendDotClass = "inline-block size-2 shrink-0 rounded-full";
 
 const iconTones = {
   light: "bg-[#e6edff] text-[#1257ff]",
-  blue: "bg-[#1257ff] text-white",
-  dark: "bg-neutral-800 text-white",
+  blue: "border border-green-600 text-green-600 bg-green-100",
+  dark: "border border-red-600 text-red-600 bg-red-100",
 };
 
 export function CardIcon({
   icon,
   tone = "light",
   className,
-  size ="size-10",
+  size = "size-8 sm:size-10",
 }: {
   icon: IconSvgElement;
   tone?: keyof typeof iconTones;
@@ -38,7 +38,7 @@ export default function CardHeading({
   children: string;
 }) {
   return (
-    <h2 className="flex items-center gap-2.5 text-lg leading-tight font-semibold tracking-tight whitespace-nowrap">
+    <h2 className="flex items-center gap-2 text-base leading-tight font-semibold tracking-tight sm:gap-2.5 sm:text-lg">
       <CardIcon icon={icon} tone={tone} />
       {children}
     </h2>

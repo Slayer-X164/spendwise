@@ -5,7 +5,7 @@ import Transactions from "@/features/dashboard/components/Transactions";
 export default function DashboardPage() {
   return (
     <main
-      className="grid min-w-0 gap-4 text-sm
+      className="grid min-w-0 gap-3 text-sm sm:gap-4
         [&_:is(a,button,input,select):focus-visible]:outline-2 [&_:is(a,button,input,select):focus-visible]:outline-offset-3
         [&_:is(a,button,input,select):focus-visible]:outline-[#1257ff] print:text-[10pt] print:[print-color-adjust:exact]"
       aria-label="Dashboard"

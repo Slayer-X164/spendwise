@@ -11,11 +11,11 @@ const gaugeCapClass = "absolute top-1/2 aspect-square w-(--gauge-stroke) -transl
 
 export default function TodayChart() {
   return (
-    <section id="today" className={`${cardClass} flex min-h-80 flex-col bg-neutral-50`}>
+    <section id="today" className={`${cardClass} flex flex-col bg-neutral-800 text-white xl:min-h-80 xl:bg-neutral-50 xl:text-neutral-900`}>
       <div className={cardTopClass}>
         <CardHeading icon={Target01Icon}>Today</CardHeading>
         <time
-          className="rounded-full bg-slate-100 px-3 py-2 font-medium whitespace-nowrap"
+          className="rounded-full bg-neutral-700 px-3 py-2 text-xs font-medium whitespace-nowrap sm:text-sm xl:bg-slate-100"
           dateTime="2026-11-23"
         >
           Mon, Nov 23
@@ -23,7 +23,7 @@ export default function TodayChart() {
       </div>
 
       <div
-        className="mt-4 flex flex-1 flex-col justify-between gap-2 rounded-2xl bg-neutral-800 px-4 pt-4 pb-3 text-white"
+        className="mt-4 flex flex-1 flex-col justify-between gap-4 rounded-2xl bg-neutral-800 text-white xl:gap-2 xl:px-4 xl:pt-4 xl:pb-3"
       >
         <div className="flex justify-between gap-1.5 text-neutral-300">
           <span>Safe to spend today</span><strong>{formatMoney(safeToSpend)}</strong>
@@ -32,7 +32,7 @@ export default function TodayChart() {
           className="relative mt-auto aspect-[1.72] w-5/6 max-w-86 self-center @container [--gauge-stroke:9.5cqi]"
           style={{ "--gauge-angle": `${progress * 180}deg` } as CSSProperties}
         >
-          <div className="absolute inset-x-0 top-0 aspect-square" aria-hidden="true">
+          <div className="absolute inset-x-0 top-0 aspect-square overflow-hidden" aria-hidden="true">
             <i
               className="absolute inset-0 rounded-full
                 [background:conic-gradient(from_270deg,#1257ff_var(--gauge-angle),#2b2d33_var(--gauge-angle)_180deg,transparent_180deg)]
@@ -54,9 +54,9 @@ export default function TodayChart() {
       </div>
 
       <dl
-        className="mt-3 flex justify-between gap-1.5
-          [&_dt]:text-sm [&_dt]:whitespace-nowrap [&_dt]:text-slate-500
-          [&_dd]:text-lg [&_dd]:font-semibold [&_dd]:tracking-tight [&_dd]:whitespace-nowrap"
+        className="mt-4 flex justify-between gap-2 rounded-xl bg-neutral-700/60 px-3 py-2.5
+          [&_dt]:text-xs [&_dt]:whitespace-nowrap [&_dt]:text-neutral-300 [&_dd]:text-sm [&_dd]:font-semibold [&_dd]:tracking-tight [&_dd]:whitespace-nowrap
+          sm:[&_dt]:text-sm sm:[&_dd]:text-lg xl:mt-3 xl:gap-1.5 xl:bg-transparent xl:p-0 xl:[&_dt]:text-slate-500"
       >
         <div><dt>Left today</dt><dd>{formatMoney(safeToSpend - spent)}</dd></div>
         <div><dt>Streak</dt><dd><span aria-hidden="true">🔥 </span>12 days</dd></div>

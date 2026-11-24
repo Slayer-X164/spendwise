@@ -16,7 +16,7 @@ import Link from "next/link";
 import { useState } from "react";
 import type { DashboardTransaction } from "@/types/dashboard/DashboardTypes";
 import { formatMoney } from "../data";
-import CardHeading, { CardIcon, cardClass, cardTopClass, legendDotClass } from "./CardHeading";
+import CardHeading, { CardIcon, cardClass, legendDotClass } from "./CardHeading";
 
 const transactions: DashboardTransaction[] = [
   { merchant: "Daily Brew Coffee", category: "Food & Dining", amount: -6.5, method: "Visa •• 4821", date: "Today, 08:42 AM", status: "Completed" },
@@ -52,13 +52,13 @@ export default function Transactions() {
 
   return (
     <section className={`${cardClass} bg-neutral-50 pb-4 xl:pb-4`}>
-      <div className={cardTopClass}>
+      <div className="grid grid-cols-[minmax(0,1fr)_auto] items-center gap-2 md:flex md:justify-between md:gap-2.5">
         <CardHeading icon={HistoryIcon}>Recent transactions</CardHeading>
-        <div className="flex items-center gap-2 print:hidden">
-          <label className="flex w-52 items-center gap-2 rounded-full bg-slate-100 px-3 text-slate-500 focus-within:outline-2 focus-within:outline-blue-600 xl:w-60">
+        <div className="contents md:flex md:items-center md:gap-2 print:hidden">
+          <label className="col-start-1 row-start-2 flex w-full min-w-0 items-center gap-2 rounded-full bg-slate-100 px-3 text-slate-500 focus-within:outline-2 focus-within:outline-blue-600 md:w-52 xl:w-60">
             <HugeiconsIcon icon={Search01Icon} aria-hidden="true" className={controlIconClass} />
             <input
-              className="h-10 w-full min-w-0 bg-transparent text-neutral-900 placeholder:text-slate-500 focus-visible:outline-none!"
+              className="h-10 w-full min-w-0 bg-transparent text-base text-neutral-900 placeholder:text-slate-500 focus-visible:outline-none! md:text-sm"
               type="search"
               aria-label="Search transactions"
               placeholder="Search transactions"
@@ -68,7 +68,7 @@ export default function Transactions() {
           </label>
           <button
             type="button"
-            className="inline-grid size-10 shrink-0 cursor-pointer place-items-center rounded-full bg-slate-100 hover:bg-neutral-200 hover:text-blue-600 data-[filtered=true]:bg-blue-100 data-[filtered=true]:text-blue-600"
+            className="col-start-2 row-start-2 inline-grid size-10 shrink-0 cursor-pointer place-items-center justify-self-end rounded-full bg-slate-100 hover:bg-neutral-200 hover:text-blue-600 data-[filtered=true]:bg-blue-100 data-[filtered=true]:text-blue-600"
             aria-label="Filter transactions"
             data-filtered={Boolean(category || status)}
             popoverTarget="transaction-filters"
@@ -96,7 +96,7 @@ export default function Transactions() {
           </div>
           <Link
             href="/transactions"
-            className="flex h-10 items-center gap-2 rounded-full bg-slate-100 px-3 font-semibold whitespace-nowrap hover:bg-neutral-200"
+            className="col-start-2 row-start-1 flex h-10 items-center gap-1 rounded-full px-1 text-xs font-semibold whitespace-nowrap text-blue-600 hover:bg-neutral-200 md:gap-2 md:bg-slate-100 md:px-3 md:text-sm md:text-inherit"
           >
             View all <HugeiconsIcon icon={ArrowRight01Icon} aria-hidden="true" className={controlIconClass} />
           </Link>
@@ -106,22 +106,23 @@ export default function Transactions() {
       <div className="mt-3">
         <table
           className="w-full border-separate border-spacing-0 text-left text-sm print:text-xs
-            [&_:is(th,td)]:px-3 [&_:is(th,td)]:py-2.5"
+            [&_:is(th,td)]:px-1 [&_:is(th,td)]:py-2.5 lg:[&_:is(th,td)]:px-3"
           aria-label="Recent transactions"
         >
-          <thead className="text-xs font-semibold tracking-wide text-slate-500 uppercase">
+          <thead className="sr-only text-xs font-semibold tracking-wide text-slate-500 uppercase lg:not-sr-only print:not-sr-only">
             <tr>
-              <th scope="col" className="w-[26.3%]">Merchant</th>
-              <th scope="col" className="w-[16%]">Category</th>
-              <th scope="col" className="w-[11.5%]">Amount</th>
-              <th scope="col" className="w-[15%]">Method</th>
-              <th scope="col" className="w-[16%]">Date</th>
-              <th scope="col">Status</th>
+              <th scope="col" className="lg:w-[26.3%]">Merchant</th>
+              <th scope="col" className="hidden w-[16%] lg:table-cell print:table-cell">Category</th>
+              <th scope="col" className="lg:w-[11.5%]">Amount</th>
+              <th scope="col" className="hidden w-[15%] lg:table-cell print:table-cell">Method</th>
+              <th scope="col" className="hidden w-[16%] lg:table-cell print:table-cell">Date</th>
+              <th scope="col" className="hidden lg:table-cell print:table-cell">Status</th>
               <th scope="col" className="print:hidden"><span className="sr-only">Details</span></th>
             </tr>
           </thead>
           <tbody
-            className="[&>tr:nth-child(even)>*]:bg-[#f4f5f8] [&>tr>:first-child]:rounded-l-xl [&>tr>:last-child]:rounded-r-xl"
+            className="max-lg:[&>tr:not(:last-child)>*]:border-b max-lg:[&>tr:not(:last-child)>*]:border-slate-200
+              lg:[&>tr:nth-child(even)>*]:bg-[#f4f5f8] lg:[&>tr>:first-child]:rounded-l-xl lg:[&>tr>:last-child]:rounded-r-xl"
           >
             {visibleTransactions.map((transaction) => <TransactionRow key={transaction.merchant} transaction={transaction} />)}
           </tbody>
@@ -142,18 +143,32 @@ function TransactionRow({ transaction }: { transaction: DashboardTransaction }) 
       <th scope="row">
         <span className="flex items-center gap-2 font-semibold">
           <CardIcon icon={icon} className={iconClass} size="size-9" />
-          {merchant}
+          <span>
+            <span className="block">{merchant}</span>
+            <span className="block text-xs font-normal text-slate-500 lg:hidden print:hidden">
+              {category} · {date.split(", ")[1] ?? date}
+            </span>
+          </span>
         </span>
       </th>
-      <td><span className={cellItemClass}><i className={`${legendDotClass} ${dotClass}`} />{category}</span></td>
-      <td className="font-semibold whitespace-nowrap">{formatMoney(amount)}</td>
-      <td>
+      <td className="hidden lg:table-cell print:table-cell">
+        <span className={cellItemClass}><i className={`${legendDotClass} ${dotClass}`} />{category}</span>
+      </td>
+      <td className="text-right font-semibold whitespace-nowrap lg:text-left">
+        {formatMoney(amount)}
+        {status === "Pending" && (
+          <span className="mt-1 block rounded-full bg-amber-100 px-2 py-0.5 text-center text-xs text-amber-800 lg:hidden print:hidden">
+            {status}
+          </span>
+        )}
+      </td>
+      <td className="hidden lg:table-cell print:table-cell">
         <span className={cellItemClass}>
           <HugeiconsIcon icon={CreditCardIcon} aria-hidden="true" className={`${controlIconClass} text-slate-500`} />{method}
         </span>
       </td>
-      <td className="whitespace-nowrap text-slate-500">{date}</td>
-      <td>
+      <td className="hidden whitespace-nowrap text-slate-500 lg:table-cell print:table-cell">{date}</td>
+      <td className="hidden lg:table-cell print:table-cell">
         <span
           className="inline-block rounded-full bg-green-100 px-3 py-1 text-xs font-semibold whitespace-nowrap text-green-800 data-[pending=true]:bg-amber-100 data-[pending=true]:text-amber-800"
           data-pending={status === "Pending"}
@@ -164,7 +179,7 @@ function TransactionRow({ transaction }: { transaction: DashboardTransaction }) 
       <td className="w-[1%] text-center print:hidden">
         <button
           type="button"
-          className="inline-grid size-7 cursor-pointer place-items-center rounded-full text-slate-500 hover:bg-neutral-200 hover:text-blue-600"
+          className="inline-grid size-9 cursor-pointer place-items-center rounded-full text-slate-500 hover:bg-neutral-200 hover:text-blue-600 lg:size-7"
           aria-label={`Details for ${merchant}`}
           popoverTarget={popoverId}
         >

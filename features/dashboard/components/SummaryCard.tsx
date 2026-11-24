@@ -45,19 +45,17 @@ const balanceTiles = [
   { count: 5, color: "bg-[#1257ff]" },
 ];
 
-const summaryClass = `${cardClass} flex min-h-60 flex-col xl:min-h-64`;
 const amountClass = "leading-none font-bold tracking-tight whitespace-nowrap tabular-nums";
-const balanceAmountSize = "text-4xl xl:text-5xl ";
-const valueRowClass = "flex items-center gap-2 ";
+const balanceAmountSize = "text-4xl xl:text-5xl";
 const trendClass = "flex w-fit shrink-0 items-center gap-1 rounded-full px-2.5 py-1 text-xs font-semibold whitespace-nowrap [&>svg]:size-3.5";
-const actionClass = "flex min-h-11 cursor-pointer items-center justify-center gap-1.5 rounded-full px-2 py-1.5 text-sm font-semibold whitespace-nowrap disabled:cursor-not-allowed [&>svg]:size-4 [&>svg]:shrink-0";
+const actionClass = "flex min-h-11 cursor-pointer items-center justify-center gap-1.5 rounded-full px-2 py-1.5 text-xs font-semibold whitespace-nowrap disabled:cursor-not-allowed sm:text-sm [&>svg]:size-4 [&>svg]:shrink-0";
 
 function Amount({ amount, balance = false }: { amount: number; balance?: boolean }) {
   const [integer, fraction] = formatMoney(amount).split(".");
 
   return (
-    <span className={`${amountClass} ${balance ? balanceAmountSize :"text-4xl"}`}>
-      {integer}<small className="text-xl font-semibold tracking-tight text-neutral-600">.{fraction}</small>
+    <span className={`${amountClass} ${balance ? balanceAmountSize : "text-2xl sm:text-3xl xl:text-4xl"}`}>
+      {integer}<small className={`font-semibold tracking-tight text-neutral-600 ${balance ? "text-xl" : "text-sm sm:text-lg xl:text-xl"}`}>.{fraction}</small>
     </span>
   );
 }
@@ -68,10 +66,10 @@ function TotalBalance() {
   const { balance, gain } = accounts[accountIndex];
 
   return (
-    <section className={`${summaryClass} bg-neutral-50 border border-neutral-300   pb-4 xl:pb-4 print:col-span-2`}>
-      <div className={cardTopClass}>
+    <section className={`${cardClass} col-span-full flex min-h-56 flex-col bg-neutral-50 pb-4 xl:col-span-1 xl:min-h-64 xl:pb-4 print:col-span-2`}>
+      <div className={`${cardTopClass} flex-wrap`}>
         <CardHeading icon={Wallet01Icon}>Total balance</CardHeading>
-        <div className="flex items-center gap-2">
+        <div className="flex flex-wrap items-center gap-2">
           <SelectPill aria-label="Balance currency">
             <option value={dashboardCurrency}>🇮🇳 {dashboardCurrency}</option>
           </SelectPill>
@@ -85,8 +83,8 @@ function TotalBalance() {
         </div>
       </div>
 
-      <div className="relative my-1.5 grid flex-1 content-center gap-3 xl:gap-4">
-        <div className={valueRowClass}>
+      <div className="relative my-3 grid flex-1 content-center gap-3 xl:my-1.5 xl:gap-4">
+        <div className="flex items-center gap-2">
           {visible ? <Amount amount={balance} balance /> : (
             <span className={`${amountClass} ${balanceAmountSize}`} aria-label="Balance hidden">••••••</span>
           )}
@@ -104,13 +102,14 @@ function TotalBalance() {
           <span className={`${trendClass} bg-green-100 text-green-800`}>
             <HugeiconsIcon icon={ArrowUp02Icon} aria-hidden="true" /> {gain}%
           </span>
-          <span>Balance up this month, great progress.</span>
+          <span className="sm:hidden">vs last month</span>
+          <span className="hidden sm:inline">Balance up this month, great progress.</span>
         </div>
         <div className="pointer-events-none absolute right-0 bottom-2 flex items-end gap-0.5" aria-hidden="true">
           {balanceTiles.map(({ count, color }, column) => (
             <div key={column} className="grid gap-0.5">
               {Array.from({ length: count }, (_, tile) => (
-                <i key={tile} className={`size-2.5 rounded-sm ${color}`} />
+                <i key={tile} className={`size-2 rounded-sm sm:size-2.5 ${color}`} />
               ))}
             </div>
           ))}
@@ -119,10 +118,12 @@ function TotalBalance() {
 
       <div className="grid grid-cols-3 gap-2 print:hidden">
         <AddTransactionDialog className={`${actionClass} bg-[#1257ff] text-white shadow-lg shadow-blue-600/38 hover:bg-blue-700 `}>
-          <HugeiconsIcon icon={PlusSignIcon} aria-hidden="true" /> Add Expense
+          <HugeiconsIcon icon={PlusSignIcon} aria-hidden="true" />
+          <span><span className="sr-only sm:not-sr-only">Add </span>Expense</span>
         </AddTransactionDialog>
         <button type="button" className={`${actionClass} bg-neutral-800 text-white`} disabled title="Income entry is unavailable">
-          <HugeiconsIcon icon={ArrowDown02Icon} aria-hidden="true" /> Add Income
+          <HugeiconsIcon icon={ArrowDown02Icon} aria-hidden="true" />
+          <span><span className="sr-only sm:not-sr-only">Add </span>Income</span>
         </button>
         <button type="button" className={`${actionClass} bg-slate-100`} disabled title="Transfers are unavailable">
           <HugeiconsIcon icon={ArrowReloadHorizontalIcon} aria-hidden="true" /> Transfer
@@ -144,8 +145,8 @@ function MonthlySummary({ type }: { type: "income" | "expense" }) {
   const salary = monthIndex === 1 ? 4350 : 4000;
 
   return (
-    <section className={`${summaryClass} bg-neutral-50 border border-neutral-300 `} id={income ? undefined : "expense"}>
-      <div className={cardTopClass}>
+    <section className={`${cardClass} flex flex-col bg-slate-100 xl:min-h-64 xl:bg-neutral-50`} id={income ? undefined : "expense"}>
+      <div className="flex flex-col items-start gap-2 sm:flex-row sm:flex-wrap sm:items-center sm:justify-between xl:gap-2.5">
         <CardHeading
           icon={income ? ArrowDown02Icon : ArrowUp02Icon}
           tone={income ? "blue" : "dark"}
@@ -162,7 +163,7 @@ function MonthlySummary({ type }: { type: "income" | "expense" }) {
         </SelectPill>
       </div>
 
-      <div className={`${valueRowClass} mt-5`}>
+      <div className="mt-3 flex flex-col items-start gap-2 xl:mt-5 xl:flex-row xl:items-center">
         <Amount amount={amount} />
         <span className={`${trendClass} bg-neutral-50 ${trendIsPositive ? "text-green-800" : "text-red-800"}`}>
           <HugeiconsIcon icon={difference >= 0 ? TradeUpIcon : TradeDownIcon} aria-hidden="true" />
@@ -172,11 +173,11 @@ function MonthlySummary({ type }: { type: "income" | "expense" }) {
 
       {income ? (
         <>
-          <p className="mt-4 w-fit rounded-full bg-neutral-50 px-3 py-2">
+          <p className="mt-3 text-xs text-slate-600 sm:text-sm xl:mt-4 xl:w-fit xl:rounded-full xl:bg-neutral-50 xl:px-3 xl:py-2 xl:text-inherit">
             Income {difference >= 0 ? "grew" : "fell"} <strong>{growth}%</strong> from last month.
           </p>
           <dl
-            className="mt-4 flex gap-6
+            className="mt-4 hidden gap-6 sm:flex
               [&>div]:border-l-2 [&>div]:pl-2.5
               [&_dt]:text-slate-500 [&_dd]:text-lg [&_dd]:font-semibold [&_dd]:tracking-tight"
           >
@@ -186,10 +187,10 @@ function MonthlySummary({ type }: { type: "income" | "expense" }) {
         </>
       ) : (
         <>
-          <p className="mt-4 text-slate-500">
+          <p className="mt-3 text-xs text-slate-600 sm:text-sm xl:mt-4 xl:text-slate-500">
             vs last month · {Math.round(amount / monthlyBudget * 100)}% of {formatMoney(monthlyBudget, true)} budget
           </p>
-          <div className="mt-3 flex h-3 gap-0.5 overflow-hidden rounded-full" aria-label="Expense breakdown">
+          <div className="mt-3 flex h-2 gap-0.5 overflow-hidden rounded-full sm:h-3" aria-label="Expense breakdown">
             {categories.map(({ label, share, color }) => (
               <span
                 key={label}
@@ -199,13 +200,13 @@ function MonthlySummary({ type }: { type: "income" | "expense" }) {
               />
             ))}
           </div>
-          <div className="mt-1.5 flex justify-between gap-1 text-xs font-semibold">
+          <div className="mt-1.5 hidden justify-between gap-1 text-xs font-semibold sm:flex">
             {categories.slice(0, 3).map(({ label, shortLabel, share }) => (
               <span key={label}>{shortLabel} {share[monthIndex]}%</span>
             ))}
             <span className="text-slate-500" title={categories.slice(3).map(({ label, share }) => `${label} ${share[monthIndex]}%`).join(", ")}>+4 more</span>
           </div>
-          <div className="mt-3 flex items-center gap-3">
+          <div className="mt-3 hidden flex-wrap items-center gap-3 sm:flex">
             {categories.slice(0, 3).map(({ label, color }) => (
               <span key={label} className="flex items-center gap-1.5">
                 <i className={legendDotClass} style={{ backgroundColor: color }} />{label}
@@ -220,7 +221,7 @@ function MonthlySummary({ type }: { type: "income" | "expense" }) {
 
 export default function SummaryCards() {
   return (
-    <div className="grid grid-cols-[1.25fr_1fr_1fr] gap-4 print:grid-cols-2">
+    <div className="grid grid-cols-2 gap-3 sm:gap-4 xl:grid-cols-[1.25fr_1fr_1fr] print:grid-cols-2">
       <TotalBalance />
       <MonthlySummary type="income" />
       <MonthlySummary type="expense" />

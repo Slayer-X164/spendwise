@@ -1,6 +1,6 @@
 "use client";
 
-import { useActionState, useRef, useState, type ReactNode } from "react";
+import { useActionState, useId, useRef, useState, type ReactNode } from "react";
 import { createTransaction } from "../actions";
 import {
   EXPENSE_CATEGORIES,
@@ -9,15 +9,15 @@ import {
 } from "../schema";
 
 const initialState: TransactionActionState = { success: false };
-const fieldClass = "w-full rounded-lg border border-neutral-300 px-3 py-2 text-sm";
+const fieldClass = "w-full rounded-lg border border-neutral-300 px-3 py-2 text-base sm:text-sm";
 const errorClass = "text-sm font-medium text-red-700";
 
-function ExpenseForm({ today, onClose }: { today: string; onClose: () => void }) {
+function ExpenseForm({ headingId, today, onClose }: { headingId: string; today: string; onClose: () => void }) {
   const [data, action, isPending] = useActionState(createTransaction, initialState);
 
   return (
     <>
-      <h2 id="add-expense-heading" className="text-xl font-semibold">Add Expense</h2>
+      <h2 id={headingId} className="text-xl font-semibold">Add Expense</h2>
       {data.success ? (
         <div className="mt-4 flex flex-col items-start gap-4">
           <p role="status">Expense details validated.</p>
@@ -76,6 +76,7 @@ export default function AddTransactionDialog({
   children: ReactNode;
   className?: string;
 }) {
+  const headingId = useId();
   const dialog = useRef<HTMLDialogElement>(null);
   const [formKey, setFormKey] = useState(0);
   const [today, setToday] = useState("");
@@ -92,11 +93,11 @@ export default function AddTransactionDialog({
       </button>
       <dialog
         ref={dialog}
-        aria-labelledby="add-expense-heading"
-        className="m-auto w-[calc(100%-2rem)] max-w-sm rounded-3xl bg-neutral-50 p-6 text-neutral-950 shadow-xl backdrop:bg-neutral-800/50"
+        aria-labelledby={headingId}
+        className="m-auto max-h-[calc(100dvh-2rem)] w-[calc(100%-2rem)] max-w-sm overflow-y-auto rounded-3xl bg-neutral-50 p-4 text-neutral-950 shadow-xl backdrop:bg-neutral-800/50 sm:p-6"
         onClose={() => setFormKey((key) => key + 1)}
       >
-        <ExpenseForm key={formKey} today={today} onClose={() => dialog.current?.close()} />
+        <ExpenseForm key={formKey} headingId={headingId} today={today} onClose={() => dialog.current?.close()} />
       </dialog>
     </>
   );

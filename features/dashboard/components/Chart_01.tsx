@@ -16,14 +16,15 @@ export default function CashflowChart() {
   const [range, setRange] = useState(6);
   const [selected, setSelected] = useState(latestMonth);
   const [hovered, setHovered] = useState<typeof latestMonth | null>(null);
+  const [showMonthDetails, setShowMonthDetails] = useState(false);
   const active = hovered ?? selected;
   const visibleMonths = cashflow2026.slice(-range);
 
   return (
-    <section id="cashflow" className={`${cardClass} flex min-h-80 flex-col bg-neutral-50`}>
-      <div className={cardTopClass}>
+    <section id="cashflow" className={`${cardClass} flex flex-col bg-neutral-50 xl:min-h-80`}>
+      <div className={`${cardTopClass} max-lg:flex-col max-lg:items-start`}>
         <CardHeading icon={ChartColumnIcon}>Cashflow</CardHeading>
-        <div className="flex items-center gap-4">
+        <div className="flex flex-wrap items-center gap-x-4 gap-y-2 max-lg:w-full max-lg:justify-between xl:flex-nowrap">
           <div className="flex items-center gap-3">
             <span className="flex items-center gap-1.5"><i className={`${legendDotClass} bg-[#1257ff]`} />Income</span>
             <span className="flex items-center gap-1.5"><i className={`${legendDotClass} bg-neutral-800`} />Expense</span>
@@ -39,6 +40,7 @@ export default function CashflowChart() {
                 setRange(Number(event.target.value));
                 setSelected(latestMonth);
                 setHovered(null);
+                setShowMonthDetails(false);
               }}
             >
               <option value={3}>3 MONTHS</option>
@@ -49,7 +51,7 @@ export default function CashflowChart() {
       </div>
 
       <div
-        className="mt-auto flex min-h-48 flex-1 items-end justify-around gap-2 pb-1"
+        className="mt-4 flex flex-1 items-end justify-around gap-2 pb-1 xl:mt-auto xl:min-h-48"
         onMouseLeave={() => setHovered(null)}
       >
         {visibleMonths.map((entry) => {
@@ -64,7 +66,10 @@ export default function CashflowChart() {
                 onMouseEnter={() => setHovered(entry)}
                 onFocus={() => setHovered(entry)}
                 onBlur={() => setHovered(null)}
-                onClick={() => setSelected(entry)}
+                onClick={() => {
+                  setSelected(entry);
+                  setShowMonthDetails(true);
+                }}
               >
                 <span
                   className="flex h-28 w-full items-end justify-center gap-1 xl:h-32"
@@ -78,7 +83,7 @@ export default function CashflowChart() {
 
               {active === entry && (
                 <div
-                  className="pointer-events-none absolute bottom-full left-1/2 z-10 mb-1 grid w-36 -translate-x-1/2 gap-1
+                  className="pointer-events-none absolute bottom-full left-1/2 z-10 mb-1 hidden w-36 -translate-x-1/2 gap-1 xl:grid
                     rounded-xl bg-neutral-800 px-3 py-2 text-xs text-white shadow-xl
                     group-first:left-0 group-first:translate-x-0 group-last:right-0 group-last:left-auto group-last:translate-x-0"
                   aria-hidden="true"
@@ -98,6 +103,13 @@ export default function CashflowChart() {
           );
         })}
       </div>
+      {showMonthDetails && (
+        <p className="mt-3 flex flex-wrap items-center gap-x-3 gap-y-1 rounded-xl bg-slate-100 px-3 py-2 text-xs xl:hidden" role="status">
+          <strong>{selected.month} {year}</strong>
+          <span>Income {formatMoney(selected.income, true)}</span>
+          <span>Expense {formatMoney(selected.expense, true)}</span>
+        </p>
+      )}
     </section>
   );
 }
