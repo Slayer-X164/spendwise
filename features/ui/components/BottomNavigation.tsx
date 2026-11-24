@@ -3,9 +3,9 @@
 import {
   ChartColumnIcon,
   Home01Icon,
-  PieChartIcon,
   PlusSignIcon,
-  UserIcon,
+  ReceiptTextIcon,
+  Settings02Icon,
 } from "@hugeicons/core-free-icons";
 import { HugeiconsIcon, type IconSvgElement } from "@hugeicons/react";
 import Link from "next/link";
@@ -37,7 +37,7 @@ function BottomNavLink({
   label: string;
   current?: "page" | "location";
 }) {
-  const className = "flex min-h-12 flex-col items-center justify-center gap-1 rounded-full text-xs font-medium text-slate-500 hover:text-blue-600 focus-visible:outline-2 focus-visible:outline-blue-600 aria-[current=page]:text-blue-600 aria-[current=location]:text-blue-600";
+  const className = "flex min-h-12 flex-col items-center justify-center gap-1 rounded-full text-xs font-medium text-slate-500 hover:text-blue-600 focus-visible:outline-2 focus-visible:outline-blue-600 aria-[current=page]:text-blue-600 aria-[current=location]:text-blue-600 max-[360px]:text-[11px]";
   const content = (
     <>
       <HugeiconsIcon icon={icon} className="size-6" aria-hidden="true" />
@@ -57,7 +57,6 @@ export default function BottomNavigation() {
   const hash = useSyncExternalStore(subscribeToHash, getHash, getServerHash);
   const onDashboard = pathname === "/dashboard";
   const analyticsActive = onDashboard && hash === "#cashflow";
-  const budgetsActive = onDashboard && hash === "#expense";
 
   return (
     <nav
@@ -68,7 +67,7 @@ export default function BottomNavigation() {
         href={onDashboard ? "#" : "/dashboard"}
         icon={Home01Icon}
         label="Home"
-        current={onDashboard && !analyticsActive && !budgetsActive ? "page" : undefined}
+        current={onDashboard && !analyticsActive ? "page" : undefined}
       />
       <BottomNavLink
         href={onDashboard ? "#cashflow" : "/dashboard#cashflow"}
@@ -83,15 +82,15 @@ export default function BottomNavigation() {
         </AddTransactionDialog>
       </div>
       <BottomNavLink
-        href={onDashboard ? "#expense" : "/dashboard#expense"}
-        icon={PieChartIcon}
-        label="Budgets"
-        current={budgetsActive ? "location" : undefined}
+        href="/transactions"
+        icon={ReceiptTextIcon}
+        label="Transactions"
+        current={pathname === "/transactions" ? "page" : undefined}
       />
       <BottomNavLink
         href="/settings"
-        icon={UserIcon}
-        label="Profile"
+        icon={Settings02Icon}
+        label="Settings"
         current={pathname === "/settings" ? "page" : undefined}
       />
     </nav>

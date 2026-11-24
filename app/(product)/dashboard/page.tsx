@@ -1,4 +1,5 @@
 import Graphs from "@/features/dashboard/components/Graphs";
+import MobileDashboardLinks from "@/features/dashboard/components/MobileDashboardLinks";
 import SummaryCards from "@/features/dashboard/components/SummaryCard";
 import Transactions from "@/features/dashboard/components/Transactions";
 
@@ -11,7 +12,9 @@ export default function DashboardPage() {
       aria-label="Dashboard"
     >
       <SummaryCards />
+      <MobileDashboardLinks />
       <Graphs />
+
       <Transactions />
     </main>
   );
