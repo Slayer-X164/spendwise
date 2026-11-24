@@ -1,186 +1,103 @@
 "use client";
-import { useActionState, useEffect, useState } from "react";
+
+import { useActionState, useRef, useState, type ReactNode } from "react";
 import { createTransaction } from "../actions";
 import {
   EXPENSE_CATEGORIES,
   PAYMENT_MODES,
-  TransactionActionState,
+  type TransactionActionState,
 } from "../schema";
 
-const initialState: TransactionActionState = {
-  success: false,
-};
-export default function AddTransactionDialog() {
-  const [data, action, isPending] = useActionState(
-    createTransaction,
-    initialState,
-  );
-  const [today, setToday] = useState("");
+const initialState: TransactionActionState = { success: false };
+const fieldClass = "w-full rounded-lg border border-neutral-300 px-3 py-2 text-sm";
+const errorClass = "text-sm font-medium text-red-700";
 
-  useEffect(() => {
-    setToday(new Date().toLocaleDateString("en-CA"));
-  }, []);
+function ExpenseForm({ today, onClose }: { today: string; onClose: () => void }) {
+  const [data, action, isPending] = useActionState(createTransaction, initialState);
 
   return (
-    <section className="w-full min-h-full bg-neutral-700/50 z-50 fixed backdrop-blur-xs p-3 flex items-center justify-center">
-      <div className="w-[380px]  bg-white rounded-2xl px-5 py-4 border-3 border-neutral-700/30">
-        <h2 className="text-lg font-medium">Add Transaction</h2>
-        <div>
-          <form action={action} className="flex flex-col gap-4 py-4">
-            {/* name */}
-            <div className="flex flex-col gap-1">
-              <label
-                htmlFor="name"
-                className="text-sm text-neutral-500 font-medium "
-              >
-                Name
-              </label>
-              <input
-                name="name"
-                type="text"
-                defaultValue={data?.fields?.name ?? ""}
-                placeholder="e.g. Food"
-                className="border border-neutral-300 p-2 rounded-lg text-sm outline-none "
-              />
-              {data?.errors?.name && (
-                <span className="text-sm text-red-500 font-medium">
-                  {data?.errors?.name}
-                </span>
-              )}
-            </div>
-            {/* price */}
-            <div className="flex flex-col gap-1">
-              <label
-                htmlFor="price"
-                className="text-sm text-neutral-500 font-medium "
-              >
-                Price
-              </label>
-              <input
-                name="price"
-                type="text"
-                step="0.01"
-                min="0"
-                placeholder="0.00"
-                defaultValue={data?.fields?.price ?? ""}
-                className="border border-neutral-300 p-2 rounded-lg text-sm outline-none "
-              />
-            </div>
-            {data?.errors?.price && (
-              <span className="text-sm text-red-500 font-medium">
-                {data?.errors?.price}
-              </span>
-            )}
-            {/* mode */}
-            <div className="flex flex-col gap-1">
-              <label
-                htmlFor="mode"
-                className="text-sm text-neutral-500 font-medium "
-              >
-                Mode
-              </label>
-              <div className="border border-neutral-300 p-2 rounded-lg text-sm">
-                <select
-                  defaultValue={data?.fields?.mode ?? "cash"}
-                  name="mode"
-                  id="mode"
-                  className="w-full outline-none"
-                >
-                  {PAYMENT_MODES.map((mode) => (
-                    <option
-                      key={mode}
-                      value={mode == "select a payment mode" ? "" : mode}
-                      disabled={mode == "select a payment mode" ? true : false}
-                      className="bg-white p-4 w-full"
-                    >
-                      {mode}
-                    </option>
-                  ))}
-                </select>
-              </div>
-            </div>
-            {data?.errors?.mode && (
-              <span className="text-sm text-red-500 font-medium">
-                {data?.errors?.mode}
-              </span>
-            )}
-            {/* Category */}
-            <div className="flex flex-col gap-1">
-              <label
-                htmlFor="category"
-                className="text-sm text-neutral-500 font-medium "
-              >
-                Category
-              </label>
-              <div className="border border-neutral-300 p-2 rounded-lg text-sm">
-                <select
-                  name="category"
-                  id="category"
-                  className="w-full outline-none"
-                  defaultValue={data?.fields?.category ?? "food"}
-                >
-                  {EXPENSE_CATEGORIES.map((category) => (
-                    <option
-                      key={category}
-                      value={category == "select a category" ? "" : category}
-                      disabled={category == "select a category" ? true : false}
-                      className="bg-white p-4 w-full"
-                    >
-                      {category}
-                    </option>
-                  ))}
-                </select>
-              </div>
-              {data?.errors?.category && (
-                <span className="text-sm text-red-500 font-medium">
-                  {data?.errors?.category}
-                </span>
-              )}
-            </div>
-            {/* Date */}
-            <div className="flex flex-col gap-1">
-              <label
-                htmlFor="date"
-                className="text-sm text-neutral-500 font-medium "
-              >
-                Date
-              </label>
-              <div className="border border-neutral-300 p-2 rounded-lg text-sm">
-                <input
-                  defaultValue={data?.fields?.date ?? today}
-                  name="date"
-                  type="date"
-                  className="text-sm outline-none w-full "
-                />
-              </div>
-              {data?.errors?.date && (
-                <span className="text-sm text-red-500 font-medium">
-                  {data?.errors?.date}
-                </span>
-              )}
-            </div>
-            {/* buttons */}
-            <div className="w-full flex items-center justify-end pt-5 gap-3 text-sm">
-              <button className=" cursor-pointer active:scale-95 transition-all duration-100 border border-neutral-300 px-4 py-2 rounded-lg capitalize font-semibold text-neutral-700">
-                cancel
-              </button>
-              <button
-                disabled={isPending}
-                className="disabled:cursor-not-allowed disabled:opacity-70 cursor-pointer active:scale-95 transition-all duration-100  bg-blue-600 text-neutral-50 px-4 py-2 rounded-lg capitalize font-semibold "
-              >
-                {isPending ? (
-                  <div className="w-full flex items-center gap-2 ">
-                    <div className="rounded-full border-2 border-neutral-50 w-5 h-5 border-r-transparent border-dashed animate-spin"></div>
-                    <span>Saving...</span>
-                  </div>
-                ) : (
-                  <h3>save transaction</h3>
-                )}
-              </button>
-            </div>
-          </form>
+    <>
+      <h2 id="add-expense-heading" className="text-xl font-semibold">Add Expense</h2>
+      {data.success ? (
+        <div className="mt-4 flex flex-col items-start gap-4">
+          <p role="status">Expense details validated.</p>
+          <button type="button" onClick={onClose} className="rounded-full bg-blue-600 px-4 py-2 font-medium text-white">
+            Done
+          </button>
         </div>
-      </div>
-    </section>
+      ) : (
+        <form action={action} className="mt-4 flex flex-col gap-3">
+          <label className="grid gap-1 text-sm font-medium">
+            Name
+            <input className={fieldClass} name="name" placeholder="e.g. Lunch" defaultValue={data.fields?.name} />
+            {data.errors?.name && <span className={errorClass}>{data.errors.name}</span>}
+          </label>
+          <label className="grid gap-1 text-sm font-medium">
+            Amount
+            <input className={fieldClass} name="price" inputMode="decimal" placeholder="0.00" defaultValue={data.fields?.price} />
+            {data.errors?.price && <span className={errorClass}>{data.errors.price}</span>}
+          </label>
+          <label className="grid gap-1 text-sm font-medium">
+            Payment method
+            <select className={fieldClass} name="mode" defaultValue={data.fields?.mode ?? "cash"}>
+              {PAYMENT_MODES.slice(1).map((mode) => <option key={mode} value={mode}>{mode}</option>)}
+            </select>
+            {data.errors?.mode && <span className={errorClass}>{data.errors.mode}</span>}
+          </label>
+          <label className="grid gap-1 text-sm font-medium">
+            Category
+            <select className={fieldClass} name="category" defaultValue={data.fields?.category ?? "food"}>
+              {EXPENSE_CATEGORIES.slice(1).map((category) => <option key={category} value={category}>{category}</option>)}
+            </select>
+            {data.errors?.category && <span className={errorClass}>{data.errors.category}</span>}
+          </label>
+          <label className="grid gap-1 text-sm font-medium">
+            Date
+            <input className={fieldClass} name="date" type="date" defaultValue={data.fields?.date ?? today} />
+            {data.errors?.date && <span className={errorClass}>{data.errors.date}</span>}
+          </label>
+          {data.message && !data.errors && <p className={errorClass} role="alert">{data.message}</p>}
+          <div className="mt-2 flex justify-end gap-2 text-sm font-semibold">
+            <button type="button" onClick={onClose} className="rounded-full bg-neutral-100 px-4 py-2">Cancel</button>
+            <button type="submit" disabled={isPending} className="rounded-full bg-blue-600 px-4 py-2 text-white disabled:opacity-60">
+              {isPending ? "Submitting…" : "Add expense"}
+            </button>
+          </div>
+        </form>
+      )}
+    </>
+  );
+}
+
+export default function AddTransactionDialog({
+  children,
+  className,
+}: {
+  children: ReactNode;
+  className?: string;
+}) {
+  const dialog = useRef<HTMLDialogElement>(null);
+  const [formKey, setFormKey] = useState(0);
+  const [today, setToday] = useState("");
+
+  function openDialog() {
+    setToday(new Date().toLocaleDateString("en-CA"));
+    dialog.current?.showModal();
+  }
+
+  return (
+    <>
+      <button type="button" className={className} aria-haspopup="dialog" onClick={openDialog}>
+        {children}
+      </button>
+      <dialog
+        ref={dialog}
+        aria-labelledby="add-expense-heading"
+        className="m-auto w-[calc(100%-2rem)] max-w-sm rounded-3xl bg-neutral-50 p-6 text-neutral-950 shadow-xl backdrop:bg-neutral-800/50"
+        onClose={() => setFormKey((key) => key + 1)}
+      >
+        <ExpenseForm key={formKey} today={today} onClose={() => dialog.current?.close()} />
+      </dialog>
+    </>
   );
 }

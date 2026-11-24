@@ -1,112 +1,67 @@
-"use client";
-import { Chart } from "@tanstack/charts/react/tooltip";
-import { tooltip as exampleTooltip, tooltip } from "@tanstack/charts/tooltip";
+import { Target01Icon } from "@hugeicons/core-free-icons";
+import type { CSSProperties } from "react";
+import { cashflow2026, formatMoney, monthlyBudget } from "../data";
+import CardHeading, { cardClass, cardTopClass } from "./CardHeading";
 
-import { defineChart } from "@tanstack/charts";
-import { pie, polar, radialArc } from "@tanstack/charts/polar";
-import { HugeiconsIcon } from "@hugeicons/react";
-import { DiscountTag02Icon } from "@hugeicons/core-free-icons";
-// import { alphabet } from '@tanstack/charts-data/alphabet'
-// import { selectRoundedDonutData } from './selection'
+const safeToSpend = 81.71;
+const spent = 64.2;
+const progress = spent / safeToSpend;
+const novemberExpense = cashflow2026[cashflow2026.length - 1].expense;
+const gaugeCapClass = "absolute top-1/2 aspect-square w-(--gauge-stroke) -translate-y-1/2 rounded-full";
 
-const gapAngle = (Math.PI / 180) * 3;
-const colors = ["#0284c7", "#4f46e5", "#9333ea", "#db2777", "#ea580c"];
-const percentage = new Intl.NumberFormat("en-US", {
-  style: "percent",
-  maximumFractionDigits: 2,
-});
-
-const categoryExpenses = [
-  { category: "Food & Dining", expense: 8500 },
-  { category: "Shopping", expense: 12000 },
-  { category: "Transportation", expense: 4500 },
-  { category: "Entertainment", expense: 3200 },
-  { category: "Education", expense: 5500 },
-];
-
-export const pieChart = (input: ChartOptions) => {
-  const arcs = pie(categoryExpenses, {
-    value: "expense",
-    gapAngle,
-  });
-
-  return defineChart(
-    {
-      marks: [
-        polar({
-          radiusRatio: 0.8,
-          marks: [
-            radialArc(arcs, {
-              id: "category-slices",
-              key: "category",
-              innerRadius: ({ radius }) => radius * 0.58,
-              cornerRadius: 8,
-              color: "category",
-            }),
-          ],
-          scales: {
-            angle: null,
-            radius: null,
-          },
-        }),
-      ],
-      scales: {
-        x: null,
-        y: null,
-      },
-      color: { range: colors },
-      margin: 0,
-    },
-    {
-      keyboard: true,
-      tooltip,
-    },
-  );
-};
-export interface ChartOptions {
-  revision: number;
-}
-
-export const chart = pieChart({
-  revision: 0,
-});
-
-export function Chart_2() {
+export default function TodayChart() {
   return (
-    <div className="flex-1 w-full h-70 bg-neutral-50 border border-neutral-300/70  rounded-xl p-4">
-      <div className="flex items-center gap-2 ">
-        <div className="size-9 rounded-lg bg-green-50 flex items-center justify-center border border-green-200">
-          <HugeiconsIcon
-            icon={DiscountTag02Icon}
-            size={20}
-            className="text-green-500"
-          />
-        </div>
-
-        <h2 className="font-semibold text-sm capitalize">Category Expense</h2>
+    <section id="today" className={`${cardClass} flex min-h-80 flex-col bg-neutral-50`}>
+      <div className={cardTopClass}>
+        <CardHeading icon={Target01Icon}>Today</CardHeading>
+        <time
+          className="rounded-full bg-slate-100 px-3 py-2 font-medium whitespace-nowrap"
+          dateTime="2026-11-23"
+        >
+          Mon, Nov 23
+        </time>
       </div>
-      <Chart
-        definition={chart}
-        height={220}
-        ariaLabel="Category wise expense"
-        renderTooltipBody={({ points }) => {
-          const point = points[0];
-          console.log("points: ", points);
-          if (!point) return null;
 
-          return (
-            <div className="max-w-60 flex items-center gap-2 rounded-xl border border-neutral-200 bg-white p-3 shadow-lg">
-              <p className="text-sm  font-medium text-gray-500">
-                {point.datum.category}
-              </p>
+      <div
+        className="mt-4 flex flex-1 flex-col justify-between gap-2 rounded-2xl bg-neutral-800 px-4 pt-4 pb-3 text-white"
+      >
+        <div className="flex justify-between gap-1.5 text-neutral-300">
+          <span>Safe to spend today</span><strong>{formatMoney(safeToSpend)}</strong>
+        </div>
+        <div
+          className="relative mt-auto aspect-[1.72] w-5/6 max-w-86 self-center @container [--gauge-stroke:9.5cqi]"
+          style={{ "--gauge-angle": `${progress * 180}deg` } as CSSProperties}
+        >
+          <div className="absolute inset-x-0 top-0 aspect-square" aria-hidden="true">
+            <i
+              className="absolute inset-0 rounded-full
+                [background:conic-gradient(from_270deg,#1257ff_var(--gauge-angle),#2b2d33_var(--gauge-angle)_180deg,transparent_180deg)]
+                [mask-image:radial-gradient(farthest-side,transparent_calc(100%_-_var(--gauge-stroke)),#000_calc(100%_-_var(--gauge-stroke)_+_0.5px))]"
+            />
+            <i className={`${gaugeCapClass} left-0 bg-[#1257ff]`} />
+            <i className={`${gaugeCapClass} right-0 bg-[#2b2d33]`} />
+            <i className="absolute inset-0 rotate-(--gauge-angle)">
+              <span className={`${gaugeCapClass} left-0 bg-[#1257ff] after:absolute after:inset-1/4 after:rounded-full after:bg-neutral-50`} />
+            </i>
+          </div>
+          <div className="absolute inset-x-0 bottom-0 grid justify-items-center text-neutral-300">
+            <span>Spent</span>
+            <strong className="text-3xl leading-none font-bold tracking-tight text-white">
+              {formatMoney(spent)}
+            </strong>
+          </div>
+        </div>
+      </div>
 
-              <p className="text-sm font-semibold text-gray-900">
-                ₹{point.datum.expense.toLocaleString("en-IN")}
-              </p>
-            </div>
-          );
-        }}
-      />
-    </div>
+      <dl
+        className="mt-3 flex justify-between gap-1.5
+          [&_dt]:text-sm [&_dt]:whitespace-nowrap [&_dt]:text-slate-500
+          [&_dd]:text-lg [&_dd]:font-semibold [&_dd]:tracking-tight [&_dd]:whitespace-nowrap"
+      >
+        <div><dt>Left today</dt><dd>{formatMoney(safeToSpend - spent)}</dd></div>
+        <div><dt>Streak</dt><dd><span aria-hidden="true">🔥 </span>12 days</dd></div>
+        <div><dt>Left in Nov</dt><dd>{formatMoney(monthlyBudget - novemberExpense)}</dd></div>
+      </dl>
+    </section>
   );
 }

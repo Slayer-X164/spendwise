@@ -1,101 +1,103 @@
 "use client";
-import { Calendar03Icon } from "@hugeicons/core-free-icons";
-import { HugeiconsIcon } from "@hugeicons/react";
-import { barY, defineChart } from "@tanstack/charts";
-import { Chart } from "@tanstack/charts/react/tooltip";
-import { scaleBand } from "@tanstack/charts/scales/band";
-import { scaleLinear } from "@tanstack/charts/scales/linear";
-import { tooltip } from "@tanstack/charts/tooltip";
 
-const monthlyExpenses = [
-  { month: "January", expense: 12500 },
-  { month: "February", expense: 15800 },
-  { month: "March", expense: 11200 },
-  { month: "April", expense: 18400 },
-  { month: "May", expense: 14600 },
-  { month: "June", expense: 20000 },
-  { month: "July", expense: 17500 },
-  { month: "August", expense: 12000}
-];
+import { ChartColumnIcon } from "@hugeicons/core-free-icons";
+import { useState } from "react";
+import { cashflow2026, formatMoney } from "../data";
+import CardHeading, { cardClass, cardTopClass, legendDotClass } from "./CardHeading";
+import SelectPill from "./SelectPill";
 
-const barGraph = defineChart({
-  marks: [
-    barY(monthlyExpenses, {
-      x: "month",
-      y: "expense",
-      fill: "#4270ff",
-      radius: 4,
-      maxThickness: 60,
-    }),
-  ],
-  scales: {
-    x: {
-      scale: () => scaleBand().padding(0.3),
-      axis:{
-        ticks: {
-          format(value) {
-            return String(value).slice(0,3)
-          },
-        }
-      }
-    },
-    y: {
-      scale: scaleLinear,
-      nice: true,
-      axis: {
-        ticks: {
-          format: (value) => `${value / 1000}k`,
-        },
-      },
-    },
-  },
-  focusRing: {
-    radius: 4,
-    strokeWidth: 2,
-    fill: "#fafafa",
-  },
+const year = 2026;
+const latestMonth = cashflow2026[cashflow2026.length - 1];
+const maximumIncome = Math.max(...cashflow2026.map(({ income }) => income));
+const tooltipRowClass = "flex items-center justify-between gap-2";
+const columnClass = "w-2/5 max-w-7 rounded-t-xl rounded-b-lg";
 
-  svgAnimation: true,
-  tooltip,
-});
+export default function CashflowChart() {
+  const [range, setRange] = useState(6);
+  const [selected, setSelected] = useState(latestMonth);
+  const [hovered, setHovered] = useState<typeof latestMonth | null>(null);
+  const active = hovered ?? selected;
+  const visibleMonths = cashflow2026.slice(-range);
 
-export function Chart_1() {
   return (
-    <div className="flex-3 w-full h-70 bg-neutral-50 border border-neutral-300/70  rounded-xl p-4">
-      <div className="flex items-center gap-2 mb-3">
-          <div className="size-9 rounded-lg bg-blue-50 flex items-center justify-center border border-blue-200">
-            <HugeiconsIcon
-              icon={Calendar03Icon}
-              size={20}
-              className="text-blue-500"
-            />
+    <section id="cashflow" className={`${cardClass} flex min-h-80 flex-col bg-neutral-50`}>
+      <div className={cardTopClass}>
+        <CardHeading icon={ChartColumnIcon}>Cashflow</CardHeading>
+        <div className="flex items-center gap-4">
+          <div className="flex items-center gap-3">
+            <span className="flex items-center gap-1.5"><i className={`${legendDotClass} bg-[#1257ff]`} />Income</span>
+            <span className="flex items-center gap-1.5"><i className={`${legendDotClass} bg-neutral-800`} />Expense</span>
           </div>
-
-          <h2 className="font-semibold text-sm capitalize">Monthly Expense</h2>
+          <div className="flex items-center gap-2">
+            <SelectPill aria-label="Cashflow year">
+              <option>{year}</option>
+            </SelectPill>
+            <SelectPill
+              aria-label="Cashflow range"
+              value={range}
+              onChange={(event) => {
+                setRange(Number(event.target.value));
+                setSelected(latestMonth);
+                setHovered(null);
+              }}
+            >
+              <option value={3}>3 MONTHS</option>
+              <option value={6}>6 MONTHS</option>
+            </SelectPill>
+          </div>
         </div>
-      <Chart
-        definition={barGraph}
-        height={200}
-        ariaLabel="Monthly expense"
-        renderTooltipBody={({ points }) => {
-          const point = points[0];
-          console.log("points: ", points)
-          if (!point) return null;
+      </div>
 
+      <div
+        className="mt-auto flex min-h-48 flex-1 items-end justify-around gap-2 pb-1"
+        onMouseLeave={() => setHovered(null)}
+      >
+        {visibleMonths.map((entry) => {
+          const { month, income, expense } = entry;
           return (
-            <div className="w-20 rounded-xl border border-neutral-200 bg-white p-3 shadow-lg">
-              <p className="text-xs font-medium text-gray-500">
-                {point.datum.month}
-              </p>
+            <div className="group relative grid min-w-0 flex-1 justify-items-center" key={month} data-active={active === entry}>
+              <button
+                type="button"
+                className="grid w-full cursor-pointer justify-items-center rounded-xl pt-1 font-semibold text-slate-500 group-data-[active=true]:text-neutral-900"
+                aria-label={`${month} ${year}, income ${formatMoney(income)}, expense ${formatMoney(expense)}`}
+                aria-pressed={selected === entry}
+                onMouseEnter={() => setHovered(entry)}
+                onFocus={() => setHovered(entry)}
+                onBlur={() => setHovered(null)}
+                onClick={() => setSelected(entry)}
+              >
+                <span
+                  className="flex h-28 w-full items-end justify-center gap-1 xl:h-32"
+                  aria-hidden="true"
+                >
+                  <i className={`${columnClass} bg-[#d3dffc] group-data-[active=true]:bg-[#1257ff]`} style={{ height: `${income / maximumIncome * 100}%` }} />
+                  <i className={`${columnClass} bg-[#dcdfe6] group-data-[active=true]:bg-neutral-800`} style={{ height: `${expense / maximumIncome * 100}%` }} />
+                </span>
+                <span className="pt-2 text-xs">{month}</span>
+              </button>
 
-              <p className="mt-1 text-sm font-semibold text-gray-900">
-                ₹{point.datum.expense.toLocaleString("en-IN")}
-              </p>
-
+              {active === entry && (
+                <div
+                  className="pointer-events-none absolute bottom-full left-1/2 z-10 mb-1 grid w-36 -translate-x-1/2 gap-1
+                    rounded-xl bg-neutral-800 px-3 py-2 text-xs text-white shadow-xl
+                    group-first:left-0 group-first:translate-x-0 group-last:right-0 group-last:left-auto group-last:translate-x-0"
+                  aria-hidden="true"
+                >
+                  <p className="font-semibold text-neutral-300">{month} {year}</p>
+                  <div className={tooltipRowClass}>
+                    <span className={tooltipRowClass}><i className={`${legendDotClass} bg-[#5788ff]`} />Income</span>
+                    <strong>{formatMoney(income, true)}</strong>
+                  </div>
+                  <div className={tooltipRowClass}>
+                    <span className={tooltipRowClass}><i className={`${legendDotClass} bg-neutral-50`} />Expense</span>
+                    <strong>{formatMoney(expense, true)}</strong>
+                  </div>
+                </div>
+              )}
             </div>
           );
-        }}
-      />
-    </div>
+        })}
+      </div>
+    </section>
   );
 }

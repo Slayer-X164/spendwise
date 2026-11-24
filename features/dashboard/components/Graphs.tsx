@@ -1,15 +1,13 @@
-import { Chart_1 } from "./Chart_01";
-import { Chart_2 } from "./Chart_02";
+import CashflowChart from "./Chart_01";
+import TodayChart from "./Chart_02";
+import DashboardShortcuts from "./DashboardShortcuts";
 
 export default function Graphs() {
   return (
-    <div className="flex flex-col lg:flex-row items-center gap-3">
-      <Chart_1 />
-      <Chart_2 />
+    <div className="grid grid-cols-[0.85fr_1.6fr_1fr] gap-4  print:grid-cols-[1fr_1.6fr]">
+      <TodayChart />
+      <CashflowChart />
+      <DashboardShortcuts />
     </div>
   );
 }
-
-
-
-

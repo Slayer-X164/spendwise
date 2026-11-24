@@ -1,306 +1,186 @@
-import { FileClockIcon, PreferenceHorizontalIcon } from "@hugeicons/core-free-icons";
+"use client";
+
+import {
+  ArrowRight01Icon,
+  Car01Icon,
+  CreditCardIcon,
+  Film01Icon,
+  HistoryIcon,
+  InformationCircleIcon,
+  PreferenceHorizontalIcon,
+  Restaurant01Icon,
+  Search01Icon,
+} from "@hugeicons/core-free-icons";
 import { HugeiconsIcon } from "@hugeicons/react";
-import { MoreVerticalIcon, ReceiptTextIcon } from "@hugeicons/core-free-icons";
+import Link from "next/link";
+import { useState } from "react";
+import type { DashboardTransaction } from "@/types/dashboard/DashboardTypes";
+import { formatMoney } from "../data";
+import CardHeading, { CardIcon, cardClass, cardTopClass, legendDotClass } from "./CardHeading";
+
+const transactions: DashboardTransaction[] = [
+  { merchant: "Daily Brew Coffee", category: "Food & Dining", amount: -6.5, method: "Visa •• 4821", date: "Today, 08:42 AM", status: "Completed" },
+  { merchant: "RideGo", category: "Transport", amount: -18.2, method: "Visa •• 4821", date: "Today, 09:15 AM", status: "Completed" },
+  { merchant: "Green Bowl Café", category: "Food & Dining", amount: -39.5, method: "Apple Pay", date: "Today, 01:05 PM", status: "Pending" },
+  { merchant: "Metro Grocery", category: "Food & Dining", amount: -86.4, method: "Debit •• 1190", date: "Yesterday, 06:30 PM", status: "Completed" },
+  { merchant: "Netflix", category: "Entertainment", amount: -15.49, method: "Visa •• 4821", date: "Yesterday, 12:00 AM", status: "Completed" },
+];
+
+const categoryStyles = {
+  "Food & Dining": { icon: Restaurant01Icon, dotClass: "bg-[#1257ff]", iconClass: "bg-[#e7eeff] text-[#1257ff]" },
+  Transport: { icon: Car01Icon, dotClass: "bg-[#121315]", iconClass: "bg-[#e8e9eb] text-[#121315]" },
+  Entertainment: { icon: Film01Icon, dotClass: "bg-[#39404d]", iconClass: "bg-[#e6e7eb] text-[#39404d]" },
+};
+
+const popoverClass = "m-0 w-60 rounded-2xl border border-slate-200 bg-neutral-50 p-4 text-left text-sm text-neutral-900 shadow-xl [inset:auto] [right:anchor(right)] [top:calc(anchor(bottom)_+_0.5rem)] [position-try-fallbacks:flip-block,flip-inline,flip-block_flip-inline]";
+const filterLabelClass = "mt-2.5 grid gap-1.5 [&>select]:w-full [&>select]:rounded-lg [&>select]:border [&>select]:border-slate-300 [&>select]:p-1.5";
+const cellItemClass = "flex items-center gap-2 whitespace-nowrap";
+const controlIconClass = "size-4 shrink-0";
 
 export default function Transactions() {
-  return (
-    <div className="w-full min-w-0 h-full flex flex-col lg:flex-row items-stretch gap-3">
-      <ExpensesList />
-      <SubscriptionsList />
-    </div>
-  );
-}
+  const [search, setSearch] = useState("");
+  const [category, setCategory] = useState("");
+  const [status, setStatus] = useState("");
 
-function ExpensesList() {
-  const expenses = [
-    {
-      id: 1,
-      name: "Adidas Ultraboost 4.0",
-      price: 35.0,
-      pay: "Cash",
-      category: "Shopping",
-      time: "Today",
-    },
-    {
-      id: 2,
-      name: "iPhone 15 Pro Max 256GB",
-      price: 999.0,
-      pay: "Credit",
-      category: "Electronics",
-      time: "Yesterday",
-    },
-    {
-      id: 3,
-      name: "MacBook Pro 14 M2 - 16GB",
-      price: 1999.0,
-      pay: "Credit",
-      category: "Electronics",
-      time: "26/08/2026",
-    },
-    {
-      id: 4,
-      name: "Lunch",
-      price: 6.48,
-      pay: "Bank",
-      category: "Food",
-      time: "04/08/2026",
-    },
-    {
-      id: 5,
-      name: "Angular Courses",
-      price: 60.48,
-      pay: "Debit",
-      category: "Education",
-      time: "15/08/2026",
-    },
-    {
-      id: 6,
-      name: "Netflix Subscription",
-      price: 15.99,
-      pay: "Credit",
-      category: "Entertainment",
-      time: "02/11/2026",
-    },
-    {
-      id: 7,
-      name: "Petrol",
-      price: 12.5,
-      pay: "UPI",
-      category: "Transportation",
-      time: "01/11/2026",
-    },
-    {
-      id: 8,
-      name: "Grocery Shopping",
-      price: 85.75,
-      pay: "UPI",
-      category: "Groceries",
-      time: "31/10/2026",
-    },
-    {
-      id: 9,
-      name: "Electricity Bill",
-      price: 42.0,
-      pay: "Bank",
-      category: "Utilities",
-      time: "29/10/2026",
-    },
-    {
-      id: 10,
-      name: "Gym Membership",
-      price: 29.99,
-      pay: "Debit",
-      category: "Health & Fitness",
-      time: "28/10/2026",
-    },
-  ];
+  const query = search.trim().toLowerCase();
+  const visibleTransactions = transactions.filter((transaction) => {
+    const searchableText = [transaction.merchant, transaction.category, transaction.method].join(" ").toLowerCase();
+    return searchableText.includes(query) &&
+      (!category || transaction.category === category) &&
+      (!status || transaction.status === status);
+  });
 
   return (
-    <div className="w-full lg:flex-3 min-w-0 h-full bg-neutral-50 border border-neutral-300/70 rounded-xl p-4 flex flex-col">
-      {/* Header */}
-      
-      <div className="w-full flex items-center justify-between gap-2">
-
-        <div className="flex items-center gap-2">
-          <div className="size-9 rounded-lg bg-rose-50 flex items-center justify-center border border-rose-200">
-            <HugeiconsIcon
-              icon={FileClockIcon}
-              size={20}
-              className="text-rose-500"
+    <section className={`${cardClass} bg-neutral-50 pb-4 xl:pb-4`}>
+      <div className={cardTopClass}>
+        <CardHeading icon={HistoryIcon}>Recent transactions</CardHeading>
+        <div className="flex items-center gap-2 print:hidden">
+          <label className="flex w-52 items-center gap-2 rounded-full bg-slate-100 px-3 text-slate-500 focus-within:outline-2 focus-within:outline-blue-600 xl:w-60">
+            <HugeiconsIcon icon={Search01Icon} aria-hidden="true" className={controlIconClass} />
+            <input
+              className="h-10 w-full min-w-0 bg-transparent text-neutral-900 placeholder:text-slate-500 focus-visible:outline-none!"
+              type="search"
+              aria-label="Search transactions"
+              placeholder="Search transactions"
+              value={search}
+              onChange={(event) => setSearch(event.target.value)}
             />
+          </label>
+          <button
+            type="button"
+            className="inline-grid size-10 shrink-0 cursor-pointer place-items-center rounded-full bg-slate-100 hover:bg-neutral-200 hover:text-blue-600 data-[filtered=true]:bg-blue-100 data-[filtered=true]:text-blue-600"
+            aria-label="Filter transactions"
+            data-filtered={Boolean(category || status)}
+            popoverTarget="transaction-filters"
+          >
+            <HugeiconsIcon icon={PreferenceHorizontalIcon} aria-hidden="true" className="size-4" />
+          </button>
+          <div id="transaction-filters" popover="auto" className={popoverClass}>
+            <strong>Filter transactions</strong>
+            <label className={filterLabelClass}>
+              Category
+              <select value={category} onChange={(event) => setCategory(event.target.value)}>
+                <option value="">All categories</option>
+                {Object.keys(categoryStyles).map((label) => <option key={label}>{label}</option>)}
+              </select>
+            </label>
+            <label className={filterLabelClass}>
+              Status
+              <select value={status} onChange={(event) => setStatus(event.target.value)}>
+                <option value="">All statuses</option>
+                <option>Completed</option>
+                <option>Pending</option>
+              </select>
+            </label>
+            <button type="button" className="mt-3 cursor-pointer font-semibold text-blue-600" onClick={() => { setCategory(""); setStatus(""); }}>Clear filters</button>
           </div>
-
-          <h2 className="font-semibold text-sm capitalize">recent expense</h2>
+          <Link
+            href="/transactions"
+            className="flex h-10 items-center gap-2 rounded-full bg-slate-100 px-3 font-semibold whitespace-nowrap hover:bg-neutral-200"
+          >
+            View all <HugeiconsIcon icon={ArrowRight01Icon} aria-hidden="true" className={controlIconClass} />
+          </Link>
         </div>
-
-        <button className="flex items-center gap-1 text-sm border py-1 px-2 rounded-md border-neutral-300 text-neutral-600 cursor-pointer hover:bg-neutral-100 shrink-0">
-          <HugeiconsIcon icon={PreferenceHorizontalIcon} className="size-4" />
-          <span>Filter</span>
-        </button>
       </div>
 
-      {/* Desktop Table */}
-      <div className="hidden md:block mt-3 w-full min-w-0 overflow-x-auto px-2">
-        <table className="w-full min-w-[600px] text-sm">
-          <thead className="border-b border-neutral-300 sticky top-0">
-            <tr className="text-left capitalize text-xs">
-              <th className="font-medium py-2 pr-3">S.N</th>
-              <th className="font-medium py-2 pr-3">Name</th>
-              <th className="font-medium py-2 pr-3">Price</th>
-              <th className="font-medium py-2 pr-3">Mode</th>
-              <th className="font-medium py-2 pr-3">Category</th>
-              <th className="font-medium py-2">Time</th>
+      <div className="mt-3">
+        <table
+          className="w-full border-separate border-spacing-0 text-left text-sm print:text-xs
+            [&_:is(th,td)]:px-3 [&_:is(th,td)]:py-2.5"
+          aria-label="Recent transactions"
+        >
+          <thead className="text-xs font-semibold tracking-wide text-slate-500 uppercase">
+            <tr>
+              <th scope="col" className="w-[26.3%]">Merchant</th>
+              <th scope="col" className="w-[16%]">Category</th>
+              <th scope="col" className="w-[11.5%]">Amount</th>
+              <th scope="col" className="w-[15%]">Method</th>
+              <th scope="col" className="w-[16%]">Date</th>
+              <th scope="col">Status</th>
+              <th scope="col" className="print:hidden"><span className="sr-only">Details</span></th>
             </tr>
           </thead>
-
-          <tbody>
-            {expenses.slice(0, 4).map((item) => (
-              <tr
-                key={item.id}
-                className="text-left text-sm font-normal text-neutral-600 border-b border-neutral-100 last:border-0"
-              >
-                <td className="py-3 pr-3">{item.id}</td>
-                <td className="py-3 pr-3 min-w-[150px]">{item.name}</td>
-                <td className="py-3 pr-3 whitespace-nowrap tabular-nums">
-                  ${item.price.toFixed(2)}
-                </td>
-                <td className="py-3 pr-3 whitespace-nowrap">{item.pay}</td>
-                <td className="py-3 pr-3 whitespace-nowrap">{item.category}</td>
-                <td className="py-3 whitespace-nowrap">{item.time}</td>
-              </tr>
-            ))}
+          <tbody
+            className="[&>tr:nth-child(even)>*]:bg-[#f4f5f8] [&>tr>:first-child]:rounded-l-xl [&>tr>:last-child]:rounded-r-xl"
+          >
+            {visibleTransactions.map((transaction) => <TransactionRow key={transaction.merchant} transaction={transaction} />)}
           </tbody>
         </table>
+        {!visibleTransactions.length && <p className="px-2 py-4 text-slate-500" role="status">No transactions match your search and filters.</p>}
       </div>
-
-      {/* Mobile Expense Cards */}
-      <div className="md:hidden mt-3 flex flex-col divide-y divide-neutral-200">
-        {expenses.slice(0, 4).map((item) => (
-          <div
-            key={item.id}
-            className="flex items-center justify-between gap-3 py-3"
-          >
-            {/* Expense Details */}
-            <div className="flex items-center gap-3 min-w-0">
-              <div className="size-9 shrink-0 rounded-lg bg-neutral-100 flex items-center justify-center text-xs font-medium text-neutral-500">
-                {item.id}
-              </div>
-
-              <div className="min-w-0">
-                <p className="text-sm font-medium text-neutral-800 truncate">
-                  {item.name}
-                </p>
-
-                <div className="flex items-center gap-2 mt-1 text-xs text-neutral-500">
-                  <span>{item.category}</span>
-                  <span>·</span>
-                  <span>{item.time}</span>
-                </div>
-              </div>
-            </div>
-
-            {/* Price and Payment */}
-            <div className="shrink-0 text-right">
-              <p className="text-sm font-medium text-neutral-800 tabular-nums">
-                ${item.price.toFixed(2)}
-              </p>
-              <p className="text-xs text-neutral-500 mt-1">{item.pay}</p>
-            </div>
-          </div>
-        ))}
-      </div>
-    </div>
+    </section>
   );
 }
 
-function SubscriptionsList() {
-  const subscriptions = [
-    {
-      id: 1,
-      name: "Netflix",
-      icon: "https://cdn.simpleicons.org/netflix/E50914",
-      price: 649,
-      billingCycle: "Monthly",
-      lastRenewed: "2026-10-18",
-      nextRenewal: "2026-11-18",
-      status: "Active",
-    },
-    {
-      id: 2,
-      name: "Spotify",
-      icon: "https://cdn.simpleicons.org/spotify/1DB954",
-      price: 119,
-      billingCycle: "Monthly",
-      lastRenewed: "2026-10-15",
-      nextRenewal: "2026-11-15",
-      status: "Active",
-    },
-    {
-      id: 3,
-      name: "YouTube Premium",
-      icon: "https://cdn.simpleicons.org/youtube/FF0000",
-      price: 149,
-      billingCycle: "Monthly",
-      lastRenewed: "2026-10-22",
-      nextRenewal: "2026-11-22",
-      status: "Active",
-    },
-    {
-      id: 4,
-      name: "Amazon Prime",
-      icon: "https://cdn.simpleicons.org/amazonprime/00A8E0",
-      price: 1499,
-      billingCycle: "Yearly",
-      lastRenewed: "2026-03-10",
-      nextRenewal: "2027-03-10",
-      status: "Active",
-    },
-  ];
-
-  const formatDate = (date: string) =>
-    new Date(date).toLocaleDateString("en-IN", {
-      day: "2-digit",
-      month: "short",
-      year: "numeric",
-      timeZone: "UTC",
-    });
+function TransactionRow({ transaction }: { transaction: DashboardTransaction }) {
+  const { merchant, category, amount, method, date, status } = transaction;
+  const { icon, dotClass, iconClass } = categoryStyles[category];
+  const popoverId = `transaction-${merchant.toLowerCase().replaceAll(" ", "-")}`;
 
   return (
-    <div className="flex-1 bg-white border border-neutral-200 rounded-xl p-4 flex flex-col h-full shadow-sm">
-      {/* Header */}
-      <div className="flex items-center justify-between mb-5">
-        <div className="flex items-center gap-2">
-          <div className="size-9 rounded-lg bg-amber-50 flex items-center justify-center border border-amber-200">
-            <HugeiconsIcon
-              icon={ReceiptTextIcon}
-              size={20}
-              className="text-amber-500"
-            />
-          </div>
-
-          <h2 className="font-semibold text-sm">Bill & Subscription</h2>
+    <tr>
+      <th scope="row">
+        <span className="flex items-center gap-2 font-semibold">
+          <CardIcon icon={icon} className={iconClass} size="size-9" />
+          {merchant}
+        </span>
+      </th>
+      <td><span className={cellItemClass}><i className={`${legendDotClass} ${dotClass}`} />{category}</span></td>
+      <td className="font-semibold whitespace-nowrap">{formatMoney(amount)}</td>
+      <td>
+        <span className={cellItemClass}>
+          <HugeiconsIcon icon={CreditCardIcon} aria-hidden="true" className={`${controlIconClass} text-slate-500`} />{method}
+        </span>
+      </td>
+      <td className="whitespace-nowrap text-slate-500">{date}</td>
+      <td>
+        <span
+          className="inline-block rounded-full bg-green-100 px-3 py-1 text-xs font-semibold whitespace-nowrap text-green-800 data-[pending=true]:bg-amber-100 data-[pending=true]:text-amber-800"
+          data-pending={status === "Pending"}
+        >
+          {status}
+        </span>
+      </td>
+      <td className="w-[1%] text-center print:hidden">
+        <button
+          type="button"
+          className="inline-grid size-7 cursor-pointer place-items-center rounded-full text-slate-500 hover:bg-neutral-200 hover:text-blue-600"
+          aria-label={`Details for ${merchant}`}
+          popoverTarget={popoverId}
+        >
+          <HugeiconsIcon icon={InformationCircleIcon} aria-hidden="true" className="size-4" />
+        </button>
+        <div className={popoverClass} id={popoverId} popover="auto">
+          <strong>{merchant}</strong>
+          <dl className="mt-2.5 grid gap-1.5 [&>div]:flex [&>div]:justify-between [&>div]:gap-2.5 [&_dt]:text-slate-500 [&_dd]:text-right">
+            <div><dt>Category</dt><dd>{category}</dd></div>
+            <div><dt>Amount</dt><dd>{formatMoney(amount)}</dd></div>
+            <div><dt>Method</dt><dd>{method}</dd></div>
+            <div><dt>Date</dt><dd>{date}</dd></div>
+            <div><dt>Status</dt><dd>{status}</dd></div>
+          </dl>
         </div>
-      </div>
-
-      {/* Subscription List */}
-      <div className="flex flex-col gap-4">
-        {subscriptions.map((subscription) => (
-          <div
-            key={subscription.id}
-            className="flex items-center justify-between gap-3"
-          >
-            {/* Logo and Details */}
-            <div className="flex items-center gap-3 min-w-0">
-              <div className="size-10 shrink-0 rounded-full bg-neutral-50 flex items-center justify-center p-2">
-                <img
-                  src={subscription.icon}
-                  alt={subscription.name}
-                  className="size-full object-contain"
-                />
-              </div>
-
-              <div className="flex flex-col min-w-0">
-                <span className="text-sm font-medium truncate">
-                  {subscription.name}
-                </span>
-
-                <span className="text-xs text-neutral-500">
-                  {formatDate(subscription.lastRenewed)}
-                </span>
-              </div>
-            </div>
-
-            {/* Price */}
-            <span className="text-sm font-semibold whitespace-nowrap">
-              {subscription.price.toLocaleString("en-IN", {
-                style: "currency",
-                currency: "INR",
-                minimumFractionDigits: 2,
-              })}
-            </span>
-          </div>
-        ))}
-      </div>
-    </div>
+      </td>
+    </tr>
   );
 }

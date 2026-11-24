@@ -31,16 +31,16 @@ export default function TransactionsTable() {
   };
 
   const buttonStyle =
-    "h-9 px-3 flex items-center justify-center gap-2 rounded-lg border border-neutral-200 bg-white text-neutral-600 text-xs font-medium hover:bg-neutral-50 transition-colors whitespace-nowrap";
+    "h-9 px-3 flex items-center justify-center gap-2 rounded-lg border border-neutral-200 bg-neutral-50 text-neutral-600 text-xs font-medium hover:bg-neutral-200 transition-colors whitespace-nowrap";
 
   return (
-    <div className="w-full min-w-0 rounded-xl border border-neutral-200 bg-white ">
+    <div className="w-full min-w-0 rounded-xl border border-neutral-200 bg-neutral-50 ">
 
       {/* Toolbar */}
       <div className="flex flex-col gap-3 p-3 sm:flex-row sm:items-center sm:justify-between sm:p-4 border-b border-neutral-200">
 
         {/* Search */}
-          <div className="h-9 py-3 flex items-center gap-2 px-3 rounded-lg border border-neutral-200 bg-white flex-1 sm:flex-none sm:w-48">
+          <div className="h-9 py-3 flex items-center gap-2 px-3 rounded-lg border border-neutral-200 bg-neutral-50 flex-1 sm:flex-none sm:w-48">
             <HugeiconsIcon
               icon={Search01Icon}
               size={16}
@@ -96,7 +96,7 @@ export default function TransactionsTable() {
           </button>
 
           {/* Add Transaction */}
-          <button className="h-9 px-3 flex items-center justify-center gap-2 rounded-lg bg-blue-600 hover:bg-blue-700 text-white text-xs font-medium transition-colors whitespace-nowrap">
+          <button className="h-9 px-3 flex items-center justify-center gap-2 rounded-lg bg-blue-600 hover:bg-neutral-700 text-white text-xs font-medium transition-colors whitespace-nowrap">
             <HugeiconsIcon icon={Add01Icon} size={16} />
             Add transaction
           </button>
@@ -128,7 +128,7 @@ export default function TransactionsTable() {
             {expenses.map((item, index) => (
               <tr
                 key={item.id}
-                className="border-b border-neutral-100 last:border-0 hover:bg-blue-50/40 transition-colors"
+                className="border-b border-neutral-100 last:border-0 hover:bg-neutral-200/40 transition-colors"
               >
                 <td className="px-4 py-4 text-neutral-500 text-xs tabular-nums">
                   {index + 1}
@@ -190,7 +190,7 @@ export default function TransactionsTable() {
             1
           </button>
 
-          <button className="size-8 rounded-lg text-xs font-medium border border-neutral-200 text-neutral-600 hover:bg-neutral-50">
+          <button className="size-8 rounded-lg text-xs font-medium border border-neutral-200 text-neutral-600 hover:bg-neutral-200">
             2
           </button>
 

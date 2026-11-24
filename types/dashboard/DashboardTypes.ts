@@ -1,11 +1,8 @@
-import { IconSvgElement } from "@hugeicons/react"
-
-export type SummaryCardProps = {
-  title:string
-  amount:number
-  description:string
-  icon:IconSvgElement
-  trendPercentage?:number
-  trendIcon?:IconSvgElement
-  topSpendingCategoryName?:string
-}
+export type DashboardTransaction = {
+  merchant: string;
+  category: "Food & Dining" | "Transport" | "Entertainment";
+  amount: number;
+  method: string;
+  date: string;
+  status: "Completed" | "Pending";
+};
