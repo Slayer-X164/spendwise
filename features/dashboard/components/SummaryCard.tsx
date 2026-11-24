@@ -145,7 +145,7 @@ function MonthlySummary({ type }: { type: "income" | "expense" }) {
   const salary = monthIndex === 1 ? 4350 : 4000;
 
   return (
-    <section className={`${cardClass} flex flex-col bg-slate-100 xl:min-h-64 xl:bg-neutral-50`} id={income ? undefined : "expense"}>
+    <section className={`${cardClass} flex flex-col bg-neutral-50 xl:min-h-64 xl:bg-neutral-50`} id={income ? undefined : "expense"}>
       <div className="flex flex-col items-start gap-2 sm:flex-row sm:flex-wrap sm:items-center sm:justify-between xl:gap-2.5">
         <CardHeading
           icon={income ? ArrowDown02Icon : ArrowUp02Icon}
