@@ -70,16 +70,17 @@ function TotalBalance() {
       <div className={`${cardTopClass} flex-wrap`}>
         <CardHeading icon={Wallet01Icon}>Total balance</CardHeading>
         <div className="flex flex-wrap items-center gap-2">
-          <SelectPill aria-label="Balance currency">
-            <option value={dashboardCurrency}>🇮🇳 {dashboardCurrency}</option>
-          </SelectPill>
           <SelectPill
-            aria-label="Balance account"
+            label="Balance currency"
+            defaultValue={dashboardCurrency}
+            options={[{ value: dashboardCurrency, label: `🇮🇳 ${dashboardCurrency}` }]}
+          />
+          <SelectPill
+            label="Balance account"
             value={accountIndex}
-            onChange={(event) => setAccountIndex(Number(event.target.value))}
-          >
-            {accounts.map(({ label }, index) => <option key={label} value={index}>{label}</option>)}
-          </SelectPill>
+            onChange={setAccountIndex}
+            options={accounts.map(({ label }, index) => ({ value: index, label }))}
+          />
         </div>
       </div>
 
@@ -125,7 +126,7 @@ function TotalBalance() {
           <HugeiconsIcon icon={ArrowDown02Icon} aria-hidden="true" />
           <span><span className="sr-only sm:not-sr-only">Add </span>Income</span>
         </button>
-        <button type="button" className={`${actionClass} bg-slate-100`} disabled title="Transfers are unavailable">
+        <button type="button" className={`${actionClass} bg-slate-200 `} disabled title="Transfers are unavailable">
           <HugeiconsIcon icon={ArrowReloadHorizontalIcon} aria-hidden="true" /> Transfer
         </button>
       </div>
@@ -154,13 +155,11 @@ function MonthlySummary({ type }: { type: "income" | "expense" }) {
           {income ? "Income" : "Expense"}
         </CardHeading>
         <SelectPill
-          tone="white"
-          aria-label={income ? "Income month" : "Expense month"}
+          label={income ? "Income month" : "Expense month"}
           value={monthIndex}
-          onChange={(event) => setMonthIndex(Number(event.target.value))}
-        >
-          {months.map(({ month }, index) => <option key={month} value={index}>{month} 2026</option>)}
-        </SelectPill>
+          onChange={setMonthIndex}
+          options={months.map(({ month }, index) => ({ value: index, label: `${month} 2026` }))}
+        />
       </div>
 
       <div className="mt-3 flex flex-col items-start gap-2 xl:mt-5 xl:flex-row xl:items-center">

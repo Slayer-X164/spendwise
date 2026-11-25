@@ -1,12 +1,17 @@
 
 import {
   Search01Icon,
-  ArrowDown01Icon,
   Download04Icon,
   Add01Icon,
   Delete02Icon,
 } from "@hugeicons/core-free-icons";
 import { HugeiconsIcon } from "@hugeicons/react";
+import SelectListbox from "@/features/ui/components/SelectListbox";
+
+const categoryOptions = ["All categories", "Shopping", "Electronics", "Food", "Education"]
+  .map((label) => ({ label, value: label }));
+const modeOptions = ["All modes", "Cash", "Credit", "Debit", "UPI", "Bank"]
+  .map((label) => ({ label, value: label }));
 
 export default function TransactionsTable() {
   const expenses = [
@@ -57,37 +62,20 @@ export default function TransactionsTable() {
 
 
           {/* Category Filter */}
-          <div className="relative">
-            <select className={`${buttonStyle} appearance-none pr-8 cursor-pointer`}>
-              <option>All categories</option>
-              <option>Shopping</option>
-              <option>Electronics</option>
-              <option>Food</option>
-              <option>Education</option>
-            </select>
-            <HugeiconsIcon
-              icon={ArrowDown01Icon}
-              size={14}
-              className="absolute right-2.5 top-1/2 -translate-y-1/2 pointer-events-none text-neutral-500"
-            />
-          </div>
+          <SelectListbox
+            label="Transaction category"
+            buttonClassName={buttonStyle}
+            defaultValue="All categories"
+            options={categoryOptions}
+          />
 
           {/* Mode Filter */}
-          <div className="relative">
-            <select className={`${buttonStyle} appearance-none pr-8 cursor-pointer`}>
-              <option>All modes</option>
-              <option>Cash</option>
-              <option>Credit</option>
-              <option>Debit</option>
-              <option>UPI</option>
-              <option>Bank</option>
-            </select>
-            <HugeiconsIcon
-              icon={ArrowDown01Icon}
-              size={14}
-              className="absolute right-2.5 top-1/2 -translate-y-1/2 pointer-events-none text-neutral-500"
-            />
-          </div>
+          <SelectListbox
+            label="Transaction payment mode"
+            buttonClassName={buttonStyle}
+            defaultValue="All modes"
+            options={modeOptions}
+          />
 
           {/* Export */}
           <button className={buttonStyle}>

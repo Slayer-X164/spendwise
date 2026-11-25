@@ -1,6 +1,7 @@
 "use client";
 
 import { useActionState, useId, useRef, useState, type ReactNode } from "react";
+import SelectListbox from "@/features/ui/components/SelectListbox";
 import { createTransaction } from "../actions";
 import {
   EXPENSE_CATEGORIES,
@@ -11,9 +12,13 @@ import {
 const initialState: TransactionActionState = { success: false };
 const fieldClass = "w-full rounded-lg border border-neutral-300 px-3 py-2 text-base sm:text-sm";
 const errorClass = "text-sm font-medium text-red-700";
+const paymentOptions = PAYMENT_MODES.slice(1).map((value) => ({ value, label: value }));
+const categoryOptions = EXPENSE_CATEGORIES.slice(1).map((value) => ({ value, label: value }));
 
 function ExpenseForm({ headingId, today, onClose }: { headingId: string; today: string; onClose: () => void }) {
   const [data, action, isPending] = useActionState(createTransaction, initialState);
+  const [mode, setMode] = useState("cash");
+  const [category, setCategory] = useState("food");
 
   return (
     <>
@@ -37,20 +42,34 @@ function ExpenseForm({ headingId, today, onClose }: { headingId: string; today: 
             <input className={fieldClass} name="price" inputMode="decimal" placeholder="0.00" defaultValue={data.fields?.price} />
             {data.errors?.price && <span className={errorClass}>{data.errors.price}</span>}
           </label>
-          <label className="grid gap-1 text-sm font-medium">
-            Payment method
-            <select className={fieldClass} name="mode" defaultValue={data.fields?.mode ?? "cash"}>
-              {PAYMENT_MODES.slice(1).map((mode) => <option key={mode} value={mode}>{mode}</option>)}
-            </select>
+          <div className="grid gap-1 text-sm font-medium">
+            <SelectListbox
+              label="Payment method"
+              labelClassName="mb-1 block"
+              buttonClassName={fieldClass}
+              name="mode"
+              value={mode}
+              onChange={setMode}
+              options={paymentOptions}
+              invalid={Boolean(data.errors?.mode)}
+              inlineOptions
+            />
             {data.errors?.mode && <span className={errorClass}>{data.errors.mode}</span>}
-          </label>
-          <label className="grid gap-1 text-sm font-medium">
-            Category
-            <select className={fieldClass} name="category" defaultValue={data.fields?.category ?? "food"}>
-              {EXPENSE_CATEGORIES.slice(1).map((category) => <option key={category} value={category}>{category}</option>)}
-            </select>
+          </div>
+          <div className="grid gap-1 text-sm font-medium">
+            <SelectListbox
+              label="Category"
+              labelClassName="mb-1 block"
+              buttonClassName={fieldClass}
+              name="category"
+              value={category}
+              onChange={setCategory}
+              options={categoryOptions}
+              invalid={Boolean(data.errors?.category)}
+              inlineOptions
+            />
             {data.errors?.category && <span className={errorClass}>{data.errors.category}</span>}
-          </label>
+          </div>
           <label className="grid gap-1 text-sm font-medium">
             Date
             <input className={fieldClass} name="date" type="date" defaultValue={data.fields?.date ?? today} />

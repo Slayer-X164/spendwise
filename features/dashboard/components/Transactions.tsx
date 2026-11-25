@@ -14,6 +14,7 @@ import {
 import { HugeiconsIcon } from "@hugeicons/react";
 import Link from "next/link";
 import { useState } from "react";
+import SelectListbox from "@/features/ui/components/SelectListbox";
 import type { DashboardTransaction } from "@/types/dashboard/DashboardTypes";
 import { formatMoney } from "../data";
 import CardHeading, { CardIcon, cardClass, legendDotClass } from "./CardHeading";
@@ -33,7 +34,17 @@ const categoryStyles = {
 };
 
 const popoverClass = "m-0 w-60 rounded-2xl border border-slate-200 bg-neutral-50 p-4 text-left text-sm text-neutral-900 shadow-xl [inset:auto] [right:anchor(right)] [top:calc(anchor(bottom)_+_0.5rem)] [position-try-fallbacks:flip-block,flip-inline,flip-block_flip-inline]";
-const filterLabelClass = "mt-2.5 grid gap-1.5 [&>select]:w-full [&>select]:rounded-lg [&>select]:border [&>select]:border-slate-300 [&>select]:p-1.5";
+const filterLabelClass = "mt-2.5 mb-1.5 block";
+const filterButtonClass = "w-full rounded-lg border border-slate-300 bg-neutral-50 px-2 py-1.5";
+const categoryOptions = [
+  { value: "", label: "All categories" },
+  ...Object.keys(categoryStyles).map((label) => ({ value: label, label })),
+];
+const statusOptions = [
+  { value: "", label: "All statuses" },
+  { value: "Completed", label: "Completed" },
+  { value: "Pending", label: "Pending" },
+];
 const cellItemClass = "flex items-center gap-2 whitespace-nowrap";
 const controlIconClass = "size-4 shrink-0";
 
@@ -77,21 +88,24 @@ export default function Transactions() {
           </button>
           <div id="transaction-filters" popover="auto" className={popoverClass}>
             <strong>Filter transactions</strong>
-            <label className={filterLabelClass}>
-              Category
-              <select value={category} onChange={(event) => setCategory(event.target.value)}>
-                <option value="">All categories</option>
-                {Object.keys(categoryStyles).map((label) => <option key={label}>{label}</option>)}
-              </select>
-            </label>
-            <label className={filterLabelClass}>
-              Status
-              <select value={status} onChange={(event) => setStatus(event.target.value)}>
-                <option value="">All statuses</option>
-                <option>Completed</option>
-                <option>Pending</option>
-              </select>
-            </label>
+            <SelectListbox
+              label="Category"
+              labelClassName={filterLabelClass}
+              buttonClassName={filterButtonClass}
+              value={category}
+              onChange={setCategory}
+              options={categoryOptions}
+              inlineOptions
+            />
+            <SelectListbox
+              label="Status"
+              labelClassName={filterLabelClass}
+              buttonClassName={filterButtonClass}
+              value={status}
+              onChange={setStatus}
+              options={statusOptions}
+              inlineOptions
+            />
             <button type="button" className="mt-3 cursor-pointer font-semibold text-blue-600" onClick={() => { setCategory(""); setStatus(""); }}>Clear filters</button>
           </div>
           <Link

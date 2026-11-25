@@ -11,6 +11,10 @@ const latestMonth = cashflow2026[cashflow2026.length - 1];
 const maximumIncome = Math.max(...cashflow2026.map(({ income }) => income));
 const tooltipRowClass = "flex items-center justify-between gap-2";
 const columnClass = "w-2/5 max-w-7 rounded-t-xl rounded-b-lg";
+const ranges = [
+  { value: 3, label: "3 MONTHS" },
+  { value: 6, label: "6 MONTHS" },
+];
 
 export default function CashflowChart() {
   const [range, setRange] = useState(6);
@@ -30,22 +34,18 @@ export default function CashflowChart() {
             <span className="flex items-center gap-1.5"><i className={`${legendDotClass} bg-neutral-800`} />Expense</span>
           </div>
           <div className="flex items-center gap-2">
-            <SelectPill aria-label="Cashflow year">
-              <option>{year}</option>
-            </SelectPill>
+            <SelectPill label="Cashflow year" defaultValue={year} options={[{ value: year, label: String(year) }]} />
             <SelectPill
-              aria-label="Cashflow range"
+              label="Cashflow range"
               value={range}
-              onChange={(event) => {
-                setRange(Number(event.target.value));
+              options={ranges}
+              onChange={(months) => {
+                setRange(months);
                 setSelected(latestMonth);
                 setHovered(null);
                 setShowMonthDetails(false);
               }}
-            >
-              <option value={3}>3 MONTHS</option>
-              <option value={6}>6 MONTHS</option>
-            </SelectPill>
+            />
           </div>
         </div>
       </div>

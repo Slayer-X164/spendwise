@@ -9,6 +9,7 @@
     "lint": "eslint"
   },
   "dependencies": {
+    "@headlessui/react": "^2.2.10",
     "@hugeicons/core-free-icons": "^4.4.0",
     "@hugeicons/react": "^1.1.10",
     "@tanstack/charts": "^1.4.0",
