@@ -4,32 +4,34 @@ import {
   PieChartIcon,
   Target01Icon,
 } from "@hugeicons/core-free-icons";
-import Link from "next/link";
 import { CardIcon } from "./CardHeading";
 
 const shortcuts = [
   { label: "Goals", href: "#today", icon: Target01Icon },
-  { label: "Subs", href: "/transactions?tab=subscriptions", icon: ArrowReloadHorizontalIcon },
+  { label: "Subs", href: null, icon: ArrowReloadHorizontalIcon },
   { label: "Reports", href: "#report", icon: File01Icon },
   { label: "Budgets", href: "#expense", icon: PieChartIcon },
 ];
+
+const tileClass = "flex min-h-22 flex-col items-center justify-center gap-2 rounded-3xl border border-neutral-300 bg-neutral-50 px-1 py-3 text-center text-xs font-semibold sm:text-sm";
 
 export default function MobileDashboardLinks() {
   return (
     <nav aria-label="Dashboard quick links" className="grid grid-cols-4 gap-2 sm:gap-3 md:hidden print:hidden">
       {shortcuts.map(({ label, href, icon }) => {
-        const ShortcutLink = href.startsWith("#") ? "a" : Link;
-
-        return (
-          <ShortcutLink
-            key={href}
-            href={href}
-            aria-label={label === "Subs" ? "Subscriptions" : undefined}
-            className="flex min-h-22 flex-col items-center border border-neutral-300 justify-center gap-2 rounded-3xl bg-neutral-50 px-1 py-3 text-center text-xs font-semibold hover:bg-blue-50 sm:text-sm"
-          >
+        const content = (
+          <>
             <CardIcon icon={icon} size="size-9 sm:size-10" />
             {label}
-          </ShortcutLink>
+          </>
+        );
+
+        return href ? (
+          <a key={label} href={href} className={`${tileClass} hover:bg-blue-50`}>{content}</a>
+        ) : (
+          <span key={label} role="link" aria-label="Subscriptions" aria-disabled="true" className={`${tileClass} opacity-60`}>
+            {content}
+          </span>
         );
       })}
     </nav>

@@ -9,8 +9,7 @@ import {
 import { HugeiconsIcon } from "@hugeicons/react";
 import Image from "next/image";
 import Link from "next/link";
-import { usePathname, useSearchParams } from "next/navigation";
-import { Suspense } from "react";
+import { usePathname } from "next/navigation";
 
 const links = [
   { label: "Dashboard", href: "/dashboard" },
@@ -18,7 +17,7 @@ const links = [
   { label: "Analytics", href: "/dashboard#cashflow" },
   { label: "Budgets", href: "/dashboard#expense" },
   { label: "Goals", href: "/dashboard#today" },
-  { label: "Subscriptions", href: "/transactions?tab=subscriptions" },
+  { label: "Subscriptions", href: null },
   { label: "Reports", href: "/dashboard#report" },
 ];
 
@@ -26,6 +25,7 @@ const iconClass = "size-4 shrink-0";
 const accountName = "Siddhesh Ghag";
 const utilityClass = "relative grid size-10 cursor-pointer place-items-center rounded-full bg-neutral-50 hover:bg-neutral-200 aria-[current=page]:text-blue-600";
 const menuClass = "m-0 min-w-48 rounded-2xl border border-[#e9ebf0] bg-neutral-50 px-4 py-3.5 text-sm text-[#121315] shadow-[0_0.625rem_2rem_#26324d22] [inset:auto] [right:anchor(right)] [top:calc(anchor(bottom)_+_0.5rem)] [position-try-fallbacks:flip-inline]";
+const navigationItemClass = "flex items-center gap-1.5 rounded-full px-3 py-2 text-sm font-medium whitespace-nowrap";
 
 function Navigation({ active }: { active: string }) {
   return (
@@ -34,36 +34,34 @@ function Navigation({ active }: { active: string }) {
       aria-label="Main navigation"
     >
       <ul className="flex w-max gap-2 p-1.5">
-        {links.map(({ label, href }) => (
-          <li key={href}>
-            <Link
-              href={href}
-              aria-current={href === active ? "page" : undefined}
-              className="flex items-center gap-1.5 rounded-full px-3 py-2 text-sm font-medium whitespace-nowrap text-slate-600 hover:bg-neutral-200
-                focus-visible:-outline-offset-2 aria-[current=page]:bg-neutral-800 aria-[current=page]:text-white"
-            >
+        {links.map(({ label, href }) => {
+          const content = (
+            <>
               <HugeiconsIcon icon={DashboardSquare02Icon} aria-hidden="true" className={iconClass} />
               {label}
-            </Link>
-          </li>
-        ))}
+            </>
+          );
+
+          return (
+            <li key={label}>
+              {href ? (
+                <Link
+                  href={href}
+                  aria-current={href === active ? "page" : undefined}
+                  className={`${navigationItemClass} text-slate-600 hover:bg-neutral-200 focus-visible:-outline-offset-2 aria-[current=page]:bg-neutral-800 aria-[current=page]:text-white`}
+                >
+                  {content}
+                </Link>
+              ) : (
+                <span role="link" aria-disabled="true" className={`${navigationItemClass} text-slate-500 opacity-60`}>
+                  {content}
+                </span>
+              )}
+            </li>
+          );
+        })}
       </ul>
     </nav>
-  );
-}
-
-function TransactionNavigation() {
-  const subscriptions = useSearchParams().get("tab") === "subscriptions";
-  return <Navigation active={subscriptions ? links[5].href : "/transactions"} />;
-}
-
-function HeaderNavigation({ pathname }: { pathname: string }) {
-  if (pathname !== "/transactions") return <Navigation active={pathname} />;
-
-  return (
-    <Suspense fallback={<Navigation active={pathname} />}>
-      <TransactionNavigation />
-    </Suspense>
   );
 }
 
@@ -83,7 +81,7 @@ export default function Header() {
         SpendWise
       </Link>
 
-      <HeaderNavigation pathname={pathname} />
+      <Navigation active={pathname} />
 
       <div className="flex shrink-0 items-center gap-2">
         <button

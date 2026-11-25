@@ -1,192 +1,206 @@
-
 import {
-  Search01Icon,
-  Download04Icon,
-  Add01Icon,
-  Delete02Icon,
+  ArrowLeft01Icon,
+  ArrowRight01Icon,
+  CreditCardIcon,
 } from "@hugeicons/core-free-icons";
 import { HugeiconsIcon } from "@hugeicons/react";
-import SelectListbox from "@/features/ui/components/SelectListbox";
+import { CardIcon, legendDotClass } from "@/features/dashboard/components/CardHeading";
+import { formatMoney } from "@/features/dashboard/data";
+import { categories, formatLedgerDate, transactionsPerPage, type LedgerTransaction } from "../ledger";
+import { TransactionStatus } from "./TransactionDetails";
 
-const categoryOptions = ["All categories", "Shopping", "Electronics", "Food", "Education"]
-  .map((label) => ({ label, value: label }));
-const modeOptions = ["All modes", "Cash", "Credit", "Debit", "UPI", "Bank"]
-  .map((label) => ({ label, value: label }));
+const pageButtonClass = "grid size-9 shrink-0 cursor-pointer place-items-center rounded-full text-slate-600 hover:bg-slate-100 disabled:cursor-default disabled:opacity-40 aria-[current=page]:bg-neutral-800 aria-[current=page]:text-white";
 
-export default function TransactionsTable() {
-  const expenses = [
-    { id: 1, name: "Adidas Ultraboost 4.0", price: 35, pay: "Cash", category: "Shopping", time: "Today" },
-    { id: 2, name: "iPhone 15 Pro Max 256GB", price: 999, pay: "Credit", category: "Electronics", time: "Yesterday" },
-    { id: 3, name: "MacBook Pro 14 M2 - 16GB", price: 1999, pay: "Credit", category: "Electronics", time: "03/11/2026" },
-    { id: 4, name: "Lunch", price: 6.48, pay: "Bank", category: "Food", time: "02/11/2026" },
-    { id: 5, name: "Angular Courses", price: 60.48, pay: "Debit", category: "Education", time: "01/11/2026" },
-    { id: 6, name: "Netflix Subscription", price: 15.99, pay: "Credit", category: "Entertainment", time: "30/10/2026" },
-    { id: 7, name: "Petrol", price: 12.5, pay: "UPI", category: "Transportation", time: "29/10/2026" },
-    { id: 8, name: "Grocery Shopping", price: 85.75, pay: "UPI", category: "Groceries", time: "28/10/2026" },
-  ];
-
-  const categoryColors: Record<string, string> = {
-    Shopping: "bg-pink-500",
-    Electronics: "bg-sky-500",
-    Food: "bg-orange-500",
-    Education: "bg-violet-500",
-    Entertainment: "bg-fuchsia-500",
-    Transportation: "bg-purple-500",
-    Groceries: "bg-emerald-500",
-  };
-
-  const buttonStyle =
-    "h-9 px-3 flex items-center justify-center gap-2 rounded-lg border border-neutral-200 bg-neutral-50 text-neutral-600 text-xs font-medium hover:bg-neutral-200 transition-colors whitespace-nowrap";
+export default function TransactionsTable({
+  rows,
+  page,
+  onPageChange,
+  selectedId,
+  onSelect,
+}: {
+  rows: LedgerTransaction[];
+  page: number;
+  onPageChange: (page: number) => void;
+  selectedId: number | null;
+  onSelect: (transaction: LedgerTransaction) => void;
+}) {
+  const start = (page - 1) * transactionsPerPage;
+  const visibleRows = rows.slice(start, start + transactionsPerPage);
+  const pageCount = Math.ceil(rows.length / transactionsPerPage);
+  const groupedRows = new Map<string, LedgerTransaction[]>();
+  for (const transaction of visibleRows) {
+    const group = groupedRows.get(transaction.date);
+    if (group) group.push(transaction);
+    else groupedRows.set(transaction.date, [transaction]);
+  }
+  const groups = [...groupedRows].map(([date, transactions]) => ({
+    date,
+    label: formatLedgerDate(date, true),
+    total: formatMoney(rows.reduce((net, row) => row.date === date ? net + row.amount : net, 0)),
+    transactions,
+  }));
 
   return (
-    <div className="w-full min-w-0 rounded-xl border border-neutral-200 bg-neutral-50 ">
-
-      {/* Toolbar */}
-      <div className="flex flex-col gap-3 p-3 sm:flex-row sm:items-center sm:justify-between sm:p-4 border-b border-neutral-200">
-
-        {/* Search */}
-          <div className="h-9 py-3 flex items-center gap-2 px-3 rounded-lg border border-neutral-200 bg-neutral-50 flex-1 sm:flex-none sm:w-48">
-            <HugeiconsIcon
-              icon={Search01Icon}
-              size={16}
-              className="text-neutral-400 shrink-0"
-            />
-            <input
-              placeholder="Search by name"
-              className="w-full min-w-0 text-xs outline-none placeholder:text-neutral-400 text-neutral-700"
-            />
+    <section className="min-w-0 scroll-m-4 md:rounded-3xl md:border md:border-neutral-300 md:bg-neutral-50 md:p-4 xl:p-5 print:break-inside-avoid" aria-label="Transaction ledger">
+      {rows.length === 0 ? (
+        <div className="rounded-3xl bg-neutral-50 p-4 py-12 text-center" role="status">
+          <h2 className="font-semibold">No matching transactions</h2>
+          <p className="mt-1 text-sm text-slate-500">Try a different search or clear your filters.</p>
+        </div>
+      ) : (
+        <>
+          <div className="grid gap-5 md:hidden print:hidden">
+            {groups.map(({ date, label, total, transactions }) => (
+              <section key={date} aria-label={label}>
+                <div className="mb-2 flex items-center justify-between gap-2 px-1 text-sm font-semibold text-slate-600">
+                  <h2><time dateTime={date}>{label}</time></h2>
+                  <span className="tabular-nums text-slate-500">{total}</span>
+                </div>
+                <ul className="divide-y divide-slate-200/70 rounded-3xl bg-neutral-50 px-3 sm:px-4">
+                  {transactions.map((transaction) => (
+                    <MobileTransactionRow key={transaction.id} transaction={transaction} onSelect={() => onSelect(transaction)} />
+                  ))}
+                </ul>
+              </section>
+            ))}
           </div>
 
-        <div className="flex flex-wrap items-center gap-2">
-
-
-
-          {/* Category Filter */}
-          <SelectListbox
-            label="Transaction category"
-            buttonClassName={buttonStyle}
-            defaultValue="All categories"
-            options={categoryOptions}
-          />
-
-          {/* Mode Filter */}
-          <SelectListbox
-            label="Transaction payment mode"
-            buttonClassName={buttonStyle}
-            defaultValue="All modes"
-            options={modeOptions}
-          />
-
-          {/* Export */}
-          <button className={buttonStyle}>
-            <HugeiconsIcon icon={Download04Icon} size={15} />
-            Export CSV
-          </button>
-
-          {/* Add Transaction */}
-          <button className="h-9 px-3 flex items-center justify-center gap-2 rounded-lg bg-blue-600 hover:bg-neutral-700 text-white text-xs font-medium transition-colors whitespace-nowrap">
-            <HugeiconsIcon icon={Add01Icon} size={16} />
-            Add transaction
-          </button>
-        </div>
-      </div>
-
-      {/* Table */}
-      <div className="w-full min-w-0 overflow-x-auto">
-        <table className="w-full min-w-[750px] text-sm">
-
-          <thead className="bg-neutral-50/70">
-            <tr className="text-left text-xs text-neutral-500 border-b border-neutral-200">
-              <th className="font-medium px-4 py-3 w-[7%]">S.N</th>
-              <th className="font-medium px-4 py-3 w-[29%]">Name</th>
-              <th className="font-medium px-4 py-3 w-[12%]">Price</th>
-              <th className="font-medium px-4 py-3 w-[12%]">Mode</th>
-              <th className="font-medium px-4 py-3 w-[20%]">Category</th>
-              <th className="font-medium px-4 py-3 w-[15%]">
-                <div className="flex items-center gap-1">
-                  Time
-                  <span className="text-blue-600">↓</span>
-                </div>
-              </th>
-              <th className="px-4 py-3 w-[5%]"></th>
-            </tr>
-          </thead>
-
-          <tbody>
-            {expenses.map((item, index) => (
-              <tr
-                key={item.id}
-                className="border-b border-neutral-100 last:border-0 hover:bg-neutral-200/40 transition-colors"
-              >
-                <td className="px-4 py-4 text-neutral-500 text-xs tabular-nums">
-                  {index + 1}
-                </td>
-
-                <td className="px-4 py-4 font-medium text-neutral-800 text-xs">
-                  {item.name}
-                </td>
-
-                <td className="px-4 py-4 text-neutral-800 font-medium text-xs whitespace-nowrap tabular-nums">
-                  ₹{item.price.toLocaleString("en-IN", {
-                    minimumFractionDigits: 2,
-                  })}
-                </td>
-
-                <td className="px-4 py-4 text-neutral-600 text-xs">
-                  {item.pay}
-                </td>
-
-                <td className="px-4 py-4">
-                  <div className="flex items-center gap-2 text-xs text-neutral-700 whitespace-nowrap">
-                    <span
-                      className={`size-2 rounded-full shrink-0 ${
-                        categoryColors[item.category] || "bg-neutral-400"
-                      }`}
-                    />
-                    {item.category}
-                  </div>
-                </td>
-
-                <td className="px-4 py-4 text-neutral-600 text-xs whitespace-nowrap">
-                  {item.time}
-                </td>
-
-                <td className="px-4 py-4">
-                  <button className="size-8 flex items-center justify-center rounded-md text-neutral-400 hover:text-red-500 hover:bg-red-50 transition-colors">
-                    <HugeiconsIcon icon={Delete02Icon} size={16} />
-                  </button>
-                </td>
+          <table className="hidden w-full border-separate border-spacing-0 text-left text-sm md:table print:table">
+            <thead className="text-xs uppercase tracking-wide text-slate-500">
+              <tr>
+                <th scope="col" className="px-2 pb-2 font-semibold">Merchant</th>
+                <th scope="col" className="px-2 pb-2 font-semibold">Category</th>
+                <th scope="col" className="px-2 pb-2 font-semibold">Method</th>
+                <th scope="col" className="px-2 pb-2 text-right font-semibold">Amount</th>
+                <th scope="col" className="px-2 pb-2 font-semibold">Status</th>
               </tr>
+            </thead>
+
+            {groups.map(({ date, label, total, transactions }) => (
+              <tbody key={date}>
+                <tr>
+                  <th scope="rowgroup" colSpan={5} className="border-b border-neutral-200 px-2 pt-4 pb-2 text-xs font-medium text-slate-600">
+                    <div className="flex justify-between gap-2">
+                      <time dateTime={date}>{label}</time>
+                      <span className="tabular-nums">{total}</span>
+                    </div>
+                  </th>
+                </tr>
+                {transactions.map((transaction) => (
+                  <TransactionRow
+                    key={transaction.id}
+                    transaction={transaction}
+                    selected={selectedId === transaction.id}
+                    onSelect={() => onSelect(transaction)}
+                  />
+                ))}
+              </tbody>
             ))}
-          </tbody>
-        </table>
-      </div>
+          </table>
+        </>
+      )}
 
-      {/* Footer / Pagination */}
-      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 px-4 py-3 border-t border-neutral-200">
-
-        <p className="text-xs text-neutral-500">
-          Showing 1–8 of 14
+      <div className="mt-4 flex flex-wrap items-center justify-between gap-2 px-1 text-sm md:border-t md:border-neutral-200 md:px-0 md:pt-3">
+        <p className="text-slate-500" role="status">
+          {rows.length === 0 ? "0 transactions" : `Showing ${start + 1}–${start + visibleRows.length} of ${rows.length}`}
         </p>
-
-        <div className="flex items-center gap-1">
-          <button className="size-8 rounded-lg border border-neutral-200 flex items-center justify-center text-neutral-500">
-            ‹
-          </button>
-
-          <button className="size-8 rounded-lg text-xs font-medium bg-blue-600 text-white shadow-sm shadow-blue-600/20">
-            1
-          </button>
-
-          <button className="size-8 rounded-lg text-xs font-medium border border-neutral-200 text-neutral-600 hover:bg-neutral-200">
-            2
-          </button>
-
-          <button className="size-8 rounded-lg border border-neutral-200 flex items-center justify-center text-neutral-500">
-            ›
-          </button>
-        </div>
+        {pageCount > 1 && (
+          <nav className="flex items-center gap-1" aria-label="Transaction pages">
+            <button type="button" className={pageButtonClass} aria-label="Previous page" disabled={page === 1} onClick={() => onPageChange(page - 1)}>
+              <HugeiconsIcon icon={ArrowLeft01Icon} className="size-4" aria-hidden="true" />
+            </button>
+            {Array.from({ length: pageCount }, (_, index) => index + 1).map((number) => (
+              <button type="button" key={number} className={pageButtonClass} aria-label={`Page ${number}`} aria-current={page === number ? "page" : undefined} onClick={() => onPageChange(number)}>
+                {number}
+              </button>
+            ))}
+            <button type="button" className={pageButtonClass} aria-label="Next page" disabled={page === pageCount} onClick={() => onPageChange(page + 1)}>
+              <HugeiconsIcon icon={ArrowRight01Icon} className="size-4" aria-hidden="true" />
+            </button>
+          </nav>
+        )}
       </div>
-    </div>
+    </section>
+  );
+}
+
+function MobileTransactionRow({
+  transaction,
+  onSelect,
+}: {
+  transaction: LedgerTransaction;
+  onSelect: () => void;
+}) {
+  const { merchant, amount, method, category, status } = transaction;
+  const { badge, icon } = categories[category];
+
+  return (
+    <li>
+      <button
+        type="button"
+        onClick={onSelect}
+        aria-label={`View details for ${merchant}`}
+        aria-haspopup="dialog"
+        className="flex min-h-16 w-full cursor-pointer items-center gap-3 rounded-xl py-3 text-left hover:bg-slate-50 focus-visible:outline-2 focus-visible:outline-blue-600"
+      >
+        <CardIcon icon={icon} className={badge} size="size-11" />
+        <span className="min-w-0 flex-1">
+          <span className="block text-base leading-tight font-semibold">{merchant}</span>
+          <span className="mt-1 block text-xs text-slate-500 sm:text-sm">{category} | {method}</span>
+        </span>
+        <span className="flex shrink-0 flex-col items-end gap-1">
+          <span className="text-base font-semibold whitespace-nowrap tabular-nums">{formatMoney(amount)}</span>
+          {status === "Pending" && <TransactionStatus status={status} />}
+        </span>
+      </button>
+    </li>
+  );
+}
+
+function TransactionRow({
+  transaction,
+  selected,
+  onSelect,
+}: {
+  transaction: LedgerTransaction;
+  selected: boolean;
+  onSelect: () => void;
+}) {
+  const { merchant, amount, method, category, status } = transaction;
+  const { badge, dot, icon } = categories[category];
+
+  return (
+    <tr data-selected={selected} className="group hover:bg-blue-50  data-[selected=true]:bg-blue-500 data-[selected=true]:text-white">
+      <th scope="row" className="rounded-l-xl font-semibold">
+        <button
+          type="button"
+          onClick={onSelect}
+          aria-label={`View details for ${merchant}`}
+          aria-pressed={selected}
+          className="flex min-h-14 w-full cursor-pointer items-center gap-2 rounded-l-xl p-2 text-left focus-visible:outline-2 focus-visible:-outline-offset-2 focus-visible:outline-blue-600"
+        >
+          <CardIcon icon={icon} className={badge} size="size-9" />
+          <span className="min-w-0">
+            <span className="block leading-tight">{merchant}</span>
+          </span>
+        </button>
+      </th>
+      <td className="px-2">
+        <span className="flex items-center gap-2">
+          <i className={`${legendDotClass} ${dot}`} aria-hidden="true" />{category}
+        </span>
+      </td>
+      <td data-selected={selected} className="px-2 text-slate-600 data-[selected=true]:text-white">
+        <span className="flex items-center gap-2 whitespace-nowrap ">
+          <HugeiconsIcon icon={CreditCardIcon} className="size-4 shrink-0" aria-hidden="true" />{method}
+        </span>
+      </td>
+      <td className="p-2 text-right font-semibold whitespace-nowrap tabular-nums">
+        {formatMoney(amount)}
+      </td>
+      <td className="rounded-r-xl px-2">
+        <TransactionStatus status={status} />
+      </td>
+    </tr>
   );
 }
