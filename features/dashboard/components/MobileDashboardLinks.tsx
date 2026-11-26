@@ -4,13 +4,14 @@ import {
   PieChartIcon,
   Target01Icon,
 } from "@hugeicons/core-free-icons";
+import Link from "next/link";
 import { CardIcon } from "./CardHeading";
 
 const shortcuts = [
   { label: "Goals", href: "#today", icon: Target01Icon },
   { label: "Subs", href: null, icon: ArrowReloadHorizontalIcon },
   { label: "Reports", href: "#report", icon: File01Icon },
-  { label: "Budgets", href: "#expense", icon: PieChartIcon },
+  { label: "Budgets", href: "/budgets", icon: PieChartIcon },
 ];
 
 const tileClass = "flex min-h-22 flex-col items-center justify-center gap-2 rounded-3xl border border-neutral-300 bg-neutral-50 px-1 py-3 text-center text-xs font-semibold sm:text-sm";
@@ -27,7 +28,7 @@ export default function MobileDashboardLinks() {
         );
 
         return href ? (
-          <a key={label} href={href} className={`${tileClass} hover:bg-blue-50`}>{content}</a>
+          <Link key={label} href={href} className={`${tileClass} hover:bg-blue-50`}>{content}</Link>
         ) : (
           <span key={label} role="link" aria-label="Subscriptions" aria-disabled="true" className={`${tileClass} opacity-60`}>
             {content}

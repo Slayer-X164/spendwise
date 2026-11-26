@@ -15,7 +15,7 @@ const links = [
   { label: "Dashboard", href: "/dashboard" },
   { label: "Transactions", href: "/transactions" },
   { label: "Analytics", href: "/analytics" },
-  { label: "Budgets", href: "/dashboard#expense" },
+  { label: "Budgets", href: "/budgets" },
   { label: "Goals", href: "/dashboard#today" },
   { label: "Subscriptions", href: null },
   { label: "Reports", href: "/dashboard#report" },
@@ -123,6 +123,14 @@ export default function Header() {
         </button>
         <div className={menuClass} id="product-account" popover="auto">
           <strong>{accountName}</strong>
+          <Link
+            href="/budgets"
+            aria-current={pathname === "/budgets" ? "page" : undefined}
+            onClick={() => document.getElementById("product-account")?.hidePopover()}
+            className="mt-1.5 block text-[#667085] hover:underline aria-[current=page]:font-semibold xl:hidden"
+          >
+            Budgets
+          </Link>
           <Link href="/settings" className="mt-1.5 block text-[#667085] hover:underline">Account settings</Link>
         </div>
       </div>
