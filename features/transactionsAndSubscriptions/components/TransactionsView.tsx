@@ -5,6 +5,7 @@ import { HugeiconsIcon } from "@hugeicons/react";
 import { useRef, useState } from "react";
 import { cardClass } from "@/features/dashboard/components/CardHeading";
 import { dashboardCurrency, formatMoney } from "@/features/dashboard/data";
+import { downloadCsv } from "@/lib/downloadCsv";
 import { getLedgerPeriod, getTransactionDateRange, transactions, transactionsPerPage, type LedgerTransaction } from "../ledger";
 import AddTransactionDialog from "./AddTransactionDialog";
 import TransactionDetails from "./TransactionDetails";
@@ -14,24 +15,11 @@ import TransactionsTable from "./TransactionsTable";
 
 const actionClass = "flex min-h-10 cursor-pointer items-center justify-center gap-2 rounded-full px-4 text-sm font-semibold focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600";
 
-function csvCell(value: string | number) {
-  if (typeof value === "number") return String(value);
-  const safeValue = /^\s*[=+\-@]/.test(value) ? `'${value}` : value;
-  return `"${safeValue.replaceAll('"', '""')}"`;
-}
-
 function exportTransactions(rows: LedgerTransaction[]) {
-  const csv = [
+  downloadCsv("spendwise-transactions.csv", [
     ["Merchant", "Date", "Category", "Payment method", `Amount (${dashboardCurrency})`, "Status"],
     ...rows.map(({ merchant, date, category, method, amount, status }) => [merchant, date, category, method, amount, status]),
-  ].map((row) => row.map(csvCell).join(",")).join("\r\n");
-
-  const url = URL.createObjectURL(new Blob(["\uFEFF", csv], { type: "text/csv;charset=utf-8" }));
-  const link = document.createElement("a");
-  link.href = url;
-  link.download = "spendwise-transactions.csv";
-  link.click();
-  setTimeout(() => URL.revokeObjectURL(url), 0);
+  ]);
 }
 
 export default function TransactionsView() {

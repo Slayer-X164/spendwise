@@ -14,7 +14,7 @@ import { usePathname } from "next/navigation";
 const links = [
   { label: "Dashboard", href: "/dashboard" },
   { label: "Transactions", href: "/transactions" },
-  { label: "Analytics", href: "/dashboard#cashflow" },
+  { label: "Analytics", href: "/analytics" },
   { label: "Budgets", href: "/dashboard#expense" },
   { label: "Goals", href: "/dashboard#today" },
   { label: "Subscriptions", href: null },

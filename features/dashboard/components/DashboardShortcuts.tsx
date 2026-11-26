@@ -8,7 +8,6 @@ import { CardIcon } from "./CardHeading";
 const shortcutClass = "flex min-h-24 min-w-0 scroll-m-4 cursor-pointer flex-col items-start justify-between gap-2.5 rounded-3xl border border-neutral-300 bg-neutral-50 p-4 text-left disabled:cursor-not-allowed enabled:hover:bg-neutral-200";
 const shortcutTitleClass = "block font-semibold";
 const shortcutDetailClass = "mt-0.5 block text-sm text-slate-500";
-const shortcutIconSize = "size-8";
 
 export default function DashboardShortcuts() {
   return (
@@ -37,11 +36,11 @@ export default function DashboardShortcuts() {
       </div>
       <div className="grid grid-cols-2 gap-3 sm:gap-4">
         <button type="button" className={shortcutClass} disabled title="Receipt scanning is unavailable">
-          <CardIcon icon={Camera01Icon} size={shortcutIconSize} />
+          <CardIcon icon={Camera01Icon} size="size-4" />
           <span><strong className={shortcutTitleClass}>Scan receipt</strong><small className={shortcutDetailClass}>Auto-fill in 2s</small></span>
         </button>
         <button type="button" id="report" className={shortcutClass} onClick={() => window.print()}>
-          <CardIcon icon={File01Icon} tone="dark" size={shortcutIconSize} />
+          <CardIcon icon={File01Icon} tone="dark" size="size-8" />
           <span><strong className={shortcutTitleClass}>Nov report</strong><small className={shortcutDetailClass}>Export PDF</small></span>
         </button>
       </div>

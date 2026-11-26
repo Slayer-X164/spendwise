@@ -10,21 +10,7 @@ import {
 import { HugeiconsIcon, type IconSvgElement } from "@hugeicons/react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { useSyncExternalStore } from "react";
 import AddTransactionDialog from "@/features/transactionsAndSubscriptions/components/AddTransactionDialog";
-
-function subscribeToHash(onChange: () => void) {
-  window.addEventListener("hashchange", onChange);
-  return () => window.removeEventListener("hashchange", onChange);
-}
-
-function getHash() {
-  return window.location.hash;
-}
-
-function getServerHash() {
-  return "";
-}
 
 function BottomNavLink({
   href,
@@ -35,9 +21,9 @@ function BottomNavLink({
   href: string;
   icon: IconSvgElement;
   label: string;
-  current?: "page" | "location";
+  current?: "page";
 }) {
-  const className = "flex min-h-12 flex-col items-center justify-center gap-1 rounded-full text-xs font-medium text-slate-500 hover:text-blue-600 focus-visible:outline-2 focus-visible:outline-blue-600 aria-[current=page]:text-blue-600 aria-[current=location]:text-blue-600 max-[360px]:text-[11px]";
+  const className = "flex min-h-12 flex-col items-center justify-center gap-1 rounded-full text-xs font-medium text-slate-500 hover:text-blue-600 focus-visible:outline-2 focus-visible:outline-blue-600 aria-[current=page]:text-blue-600 max-[360px]:text-[11px]";
   const content = (
     <>
       <HugeiconsIcon icon={icon} className="size-6" aria-hidden="true" />
@@ -54,9 +40,7 @@ function BottomNavLink({
 
 export default function BottomNavigation() {
   const pathname = usePathname();
-  const hash = useSyncExternalStore(subscribeToHash, getHash, getServerHash);
   const onDashboard = pathname === "/dashboard";
-  const analyticsActive = onDashboard && hash === "#cashflow";
 
   return (
     <nav
@@ -67,13 +51,13 @@ export default function BottomNavigation() {
         href={onDashboard ? "#" : "/dashboard"}
         icon={Home01Icon}
         label="Home"
-        current={onDashboard && !analyticsActive ? "page" : undefined}
+        current={onDashboard ? "page" : undefined}
       />
       <BottomNavLink
-        href={onDashboard ? "#cashflow" : "/dashboard#cashflow"}
+        href="/analytics"
         icon={ChartColumnIcon}
         label="Analytics"
-        current={analyticsActive ? "location" : undefined}
+        current={pathname === "/analytics" ? "page" : undefined}
       />
       <div className="grid place-items-center">
         <AddTransactionDialog className="grid size-14 -translate-y-4 cursor-pointer place-items-center rounded-2xl bg-[#1257ff] text-white shadow-lg shadow-blue-600/30 hover:bg-blue-700 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600">

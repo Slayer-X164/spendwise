@@ -21,7 +21,7 @@ export default function MobileDashboardLinks() {
       {shortcuts.map(({ label, href, icon }) => {
         const content = (
           <>
-            <CardIcon icon={icon} size="size-9 sm:size-10" />
+            <CardIcon icon={icon} size="size-4.5 sm:size-5" />
             {label}
           </>
         );
