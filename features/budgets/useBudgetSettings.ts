@@ -1,8 +1,9 @@
 import { useSyncExternalStore } from "react";
 import { z } from "zod";
+import { createBrowserStorage } from "@/lib/browserStorage";
 import { defaultBudgetSettings, maxBudgetLimit, type BudgetSettings } from "./data";
 
-const storageKey = "spendwise:budgets:v1";
+const storage = createBrowserStorage("spendwise:budgets:v1");
 const settingsSchema = z.object({
   limits: z.record(z.string(), z.array(z.object({
     name: z.string().min(1).max(32),
@@ -14,28 +15,6 @@ const settingsSchema = z.object({
     dailyReminder: z.boolean(),
   }),
 });
-let memory: string | null = null;
-
-function readSettings() {
-  try {
-    return memory ?? window.localStorage.getItem(storageKey);
-  } catch {
-    return memory;
-  }
-}
-
-function subscribe(onChange: () => void) {
-  function onStorage(event: StorageEvent) {
-    if (event.key === storageKey || event.key === null) onChange();
-  }
-
-  window.addEventListener("storage", onStorage);
-  window.addEventListener(storageKey, onChange);
-  return () => {
-    window.removeEventListener("storage", onStorage);
-    window.removeEventListener(storageKey, onChange);
-  };
-}
 
 function parseSettings(value: string | null): BudgetSettings {
   if (value) {
@@ -50,17 +29,10 @@ function parseSettings(value: string | null): BudgetSettings {
 }
 
 export function updateBudgetSettings(update: (current: BudgetSettings) => BudgetSettings) {
-  const value = JSON.stringify(update(parseSettings(readSettings())));
-  try {
-    window.localStorage.setItem(storageKey, value);
-    memory = null;
-  } catch {
-    memory = value;
-  }
-  window.dispatchEvent(new Event(storageKey));
+  storage.write(JSON.stringify(update(parseSettings(storage.read()))));
 }
 
 export default function useBudgetSettings() {
-  const value = useSyncExternalStore(subscribe, readSettings, () => null);
+  const value = useSyncExternalStore(storage.subscribe, storage.read, () => null);
   return parseSettings(value);
 }

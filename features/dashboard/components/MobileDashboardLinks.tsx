@@ -8,7 +8,7 @@ import Link from "next/link";
 import { CardIcon } from "./CardHeading";
 
 const shortcuts = [
-  { label: "Goals", href: "#today", icon: Target01Icon },
+  { label: "Goals", href: "/goals", icon: Target01Icon },
   { label: "Subs", href: null, icon: ArrowReloadHorizontalIcon },
   { label: "Reports", href: "#report", icon: File01Icon },
   { label: "Budgets", href: "/budgets", icon: PieChartIcon },

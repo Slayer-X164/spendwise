@@ -11,12 +11,16 @@ import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 
+const featureLinks = [
+  { label: "Budgets", href: "/budgets" },
+  { label: "Goals", href: "/goals" },
+];
+
 const links = [
   { label: "Dashboard", href: "/dashboard" },
   { label: "Transactions", href: "/transactions" },
   { label: "Analytics", href: "/analytics" },
-  { label: "Budgets", href: "/budgets" },
-  { label: "Goals", href: "/dashboard#today" },
+  ...featureLinks,
   { label: "Subscriptions", href: null },
   { label: "Reports", href: "/dashboard#report" },
 ];
@@ -30,7 +34,7 @@ const navigationItemClass = "flex items-center gap-1.5 rounded-full px-3 py-2 te
 function Navigation({ active }: { active: string }) {
   return (
     <nav
-      className="hidden min-w-0 overflow-x-auto rounded-full border border-neutral-300 bg-neutral-50 xl:block"
+      className="hidden min-w-0 overflow-x-auto rounded-full border border-neutral-300 bg-neutral-50 xl:block "
       aria-label="Main navigation"
     >
       <ul className="flex w-max gap-2 p-1.5">
@@ -70,7 +74,7 @@ export default function Header() {
 
   return (
     <header
-      className="mb-3 flex min-w-0 items-center justify-between gap-2 sm:mb-4 sm:gap-3 sm:px-1
+      className="mb-4 flex min-w-0 items-center justify-between gap-2 sm:mb-4 sm:gap-3 sm:px-1
         [&_:is(button,a):focus-visible]:outline-2 [&_:is(button,a):focus-visible]:outline-blue-600 print:hidden"
     >
       <Link
@@ -123,14 +127,17 @@ export default function Header() {
         </button>
         <div className={menuClass} id="product-account" popover="auto">
           <strong>{accountName}</strong>
-          <Link
-            href="/budgets"
-            aria-current={pathname === "/budgets" ? "page" : undefined}
-            onClick={() => document.getElementById("product-account")?.hidePopover()}
-            className="mt-1.5 block text-[#667085] hover:underline aria-[current=page]:font-semibold xl:hidden"
-          >
-            Budgets
-          </Link>
+          {featureLinks.map(({ label, href }) => (
+            <Link
+              key={label}
+              href={href}
+              aria-current={pathname === href ? "page" : undefined}
+              onClick={() => document.getElementById("product-account")?.hidePopover()}
+              className="mt-1.5 block text-[#667085] hover:underline aria-[current=page]:font-semibold xl:hidden"
+            >
+              {label}
+            </Link>
+          ))}
           <Link href="/settings" className="mt-1.5 block text-[#667085] hover:underline">Account settings</Link>
         </div>
       </div>
