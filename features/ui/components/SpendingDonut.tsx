@@ -8,11 +8,13 @@ export default function SpendingDonut({
   categories,
   label,
   wholeTotal = false,
+  sideBySide = false,
 }: {
   total: number;
   categories: { name: string; color: string; amount: number }[];
   label: string;
   wholeTotal?: boolean;
+  sideBySide?: boolean;
 }) {
   const { active, pointProps, setHovered, togglePin } = useChartSelection();
   const formatShare = (amount: number) => `${(amount / total * 100).toFixed(1)}%`;
@@ -47,7 +49,7 @@ export default function SpendingDonut({
   }
 
   return (
-    <>
+    <div className={sideBySide ? "grid min-w-0 items-center gap-3 lg:grid-cols-[auto_minmax(0,1fr)] lg:gap-5" : undefined}>
       <div
         className="relative mx-auto mt-1 grid size-40 cursor-pointer place-items-center rounded-full sm:size-44 xl:size-48"
         style={{ backgroundImage: `conic-gradient(${stops.join(", ")})` }}
@@ -73,7 +75,7 @@ export default function SpendingDonut({
         )}
       </div>
       <p className="sr-only">{label} spending {formatMoney(total)}</p>
-      <ul className="mt-4 grid text-sm">
+      <ul className={`grid min-w-0 text-sm ${sideBySide ? "" : "mt-4"}`}>
         {categories.map(({ name, color, amount }, index) => (
           <li key={name}>
             <button
@@ -92,6 +94,6 @@ export default function SpendingDonut({
           </li>
         ))}
       </ul>
-    </>
+    </div>
   );
 }

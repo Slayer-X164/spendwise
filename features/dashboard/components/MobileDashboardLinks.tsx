@@ -10,7 +10,7 @@ import { CardIcon } from "./CardHeading";
 const shortcuts = [
   { label: "Goals", href: "/goals", icon: Target01Icon },
   { label: "Subs", href: "/subscriptions", icon: ArrowReloadHorizontalIcon },
-  { label: "Reports", href: "#report", icon: File01Icon },
+  { label: "Reports", href: "/reports", icon: File01Icon },
   { label: "Budgets", href: "/budgets", icon: PieChartIcon },
 ];
 

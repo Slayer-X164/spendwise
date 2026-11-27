@@ -15,6 +15,7 @@ const featureLinks = [
   { label: "Budgets", href: "/budgets" },
   { label: "Goals", href: "/goals" },
   { label: "Subscriptions", href: "/subscriptions" },
+  { label: "Reports", href: "/reports" },
 ];
 
 const links = [
@@ -22,7 +23,6 @@ const links = [
   { label: "Transactions", href: "/transactions" },
   { label: "Analytics", href: "/analytics" },
   ...featureLinks,
-  { label: "Reports", href: "/dashboard#report" },
 ];
 
 const iconClass = "size-4 shrink-0";

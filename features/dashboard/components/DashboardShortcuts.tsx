@@ -1,7 +1,6 @@
-"use client";
-
 import { ArrowUpRight03Icon, Camera01Icon, File01Icon } from "@hugeicons/core-free-icons";
 import { HugeiconsIcon } from "@hugeicons/react";
+import Link from "next/link";
 import { formatMoney } from "../data";
 import { CardIcon } from "./CardHeading";
 
@@ -39,10 +38,10 @@ export default function DashboardShortcuts() {
           <CardIcon icon={Camera01Icon} size="size-4" />
           <span><strong className={shortcutTitleClass}>Scan receipt</strong><small className={shortcutDetailClass}>Auto-fill in 2s</small></span>
         </button>
-        <button type="button" id="report" className={shortcutClass} onClick={() => window.print()}>
+        <Link href="/reports" id="report" className={shortcutClass}>
           <CardIcon icon={File01Icon} tone="dark" size="size-8" />
-          <span><strong className={shortcutTitleClass}>Nov report</strong><small className={shortcutDetailClass}>Export PDF</small></span>
-        </button>
+          <span><strong className={shortcutTitleClass}>Reports</strong><small className={shortcutDetailClass}>Preview &amp; export</small></span>
+        </Link>
       </div>
     </aside>
   );
