@@ -73,13 +73,6 @@ export function formatGoalDate(date: string, style: "short" | "full" | "month") 
   return formatter.format(new Date(date));
 }
 
-export function localDate() {
-  const now = new Date();
-  const month = String(now.getMonth() + 1).padStart(2, "0");
-  const day = String(now.getDate()).padStart(2, "0");
-  return `${now.getFullYear()}-${month}-${day}`;
-}
-
 export function money(amount: number) {
   return formatMoney(amount / 100, amount % 100 === 0);
 }

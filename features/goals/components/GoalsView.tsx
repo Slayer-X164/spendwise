@@ -1,11 +1,11 @@
 "use client";
 
-import { ArrowLeft01Icon, PlusSignIcon } from "@hugeicons/core-free-icons";
+import { PlusSignIcon } from "@hugeicons/core-free-icons";
 import { HugeiconsIcon } from "@hugeicons/react";
-import Link from "next/link";
 import { useRef, useState } from "react";
 import { cardClass } from "@/features/dashboard/components/CardHeading";
-import { getGoalProgress, getSaved, getSavingsHistory, localDate, money, type Contribution, type GoalPlan } from "../data";
+import { localDate } from "@/lib/useLocalDate";
+import { getGoalProgress, getSaved, getSavingsHistory, money, type Contribution, type GoalPlan } from "../data";
 import useGoals, { updateGoals } from "../useGoals";
 import { FeaturedGoal, GoalCard } from "./GoalCards";
 import GoalDialog, { type GoalDialogMode } from "./GoalDialog";

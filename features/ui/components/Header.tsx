@@ -14,6 +14,7 @@ import { usePathname } from "next/navigation";
 const featureLinks = [
   { label: "Budgets", href: "/budgets" },
   { label: "Goals", href: "/goals" },
+  { label: "Subscriptions", href: "/subscriptions" },
 ];
 
 const links = [
@@ -21,7 +22,6 @@ const links = [
   { label: "Transactions", href: "/transactions" },
   { label: "Analytics", href: "/analytics" },
   ...featureLinks,
-  { label: "Subscriptions", href: null },
   { label: "Reports", href: "/dashboard#report" },
 ];
 
@@ -38,32 +38,18 @@ function Navigation({ active }: { active: string }) {
       aria-label="Main navigation"
     >
       <ul className="flex w-max gap-2 p-1.5">
-        {links.map(({ label, href }) => {
-          const content = (
-            <>
+        {links.map(({ label, href }) => (
+          <li key={label}>
+            <Link
+              href={href}
+              aria-current={href === active ? "page" : undefined}
+              className={`${navigationItemClass} text-slate-600 hover:bg-neutral-200 focus-visible:-outline-offset-2 aria-[current=page]:bg-neutral-800 aria-[current=page]:text-white`}
+            >
               <HugeiconsIcon icon={DashboardSquare02Icon} aria-hidden="true" className={iconClass} />
               {label}
-            </>
-          );
-
-          return (
-            <li key={label}>
-              {href ? (
-                <Link
-                  href={href}
-                  aria-current={href === active ? "page" : undefined}
-                  className={`${navigationItemClass} text-slate-600 hover:bg-neutral-200 focus-visible:-outline-offset-2 aria-[current=page]:bg-neutral-800 aria-[current=page]:text-white`}
-                >
-                  {content}
-                </Link>
-              ) : (
-                <span role="link" aria-disabled="true" className={`${navigationItemClass} text-slate-500 opacity-60`}>
-                  {content}
-                </span>
-              )}
-            </li>
-          );
-        })}
+            </Link>
+          </li>
+        ))}
       </ul>
     </nav>
   );
